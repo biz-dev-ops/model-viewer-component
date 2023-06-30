@@ -1,0 +1,178 @@
+/* Module: Fullscreen */
+body[data-fullscreen-active="true"] {
+    overflow: hidden;
+}
+
+[data-fullscreen] {
+    position: relative;
+    overflow: hidden;
+    margin: -1px;
+    padding: 1px;
+}
+
+[data-fullscreen] [data-toggle="fullscreen"] {
+    --icon-padding: calc(var(--space-sm) + var(--space-xxs));
+
+    box-shadow: var(--drop-shadow-base);
+    color: currentColor;
+    border: 0;
+    border-radius: var(--radius-base);
+    display: block;
+    height: var(--space-lg);
+    outline: none;
+    padding: var(--space-sm);
+    position: relative;
+    text-decoration: none;
+    transition: background-color var(--duration-base), color var(--duration-base);
+    transform: translateX(calc(var(--space-lg) * 3));
+    width: var(--space-lg);
+}
+
+[data-fullscreen] [data-toggle="fullscreen"]:active,
+[data-fullscreen] [data-toggle="fullscreen"]:focus,
+[data-fullscreen]:hover [data-toggle="fullscreen"] {
+    transform: none;
+}
+
+[data-fullscreen] [data-toggle="fullscreen"] .label {
+    display: none;
+}
+
+[data-fullscreen] [data-toggle="fullscreen"]::before,
+[data-fullscreen] [data-toggle="fullscreen"]::after {
+    border-style: solid;
+    border-color: currentColor;
+    content: "";
+    display: block;
+    height: var(--space-xs);
+    width: var(--space-xs);
+    position: absolute;
+}
+
+[data-fullscreen] [data-toggle="fullscreen"]::before {
+    border-width: 0 0 var(--line-thin) var(--line-thin);
+    bottom: var(--icon-padding);
+    left: var(--icon-padding);
+}
+
+[data-fullscreen] [data-toggle="fullscreen"]::after {
+    border-width: var(--line-thin) var(--line-thin) 0 0;
+    right: var(--icon-padding);
+    top: var(--icon-padding);
+}
+
+[data-fullscreen] header,
+[data-fullscreen] footer {
+    position: absolute;
+    inset-inline-end: var(--space-md);
+    inset-block-start: var(--space-md);
+    z-index: var(--z-fullscreen-button);
+}
+
+[data-fullscreen] footer {
+    inset-block: auto  var(--space-md);
+}
+
+[data-fullscreen="false"] iframe:where(.openapi, .asyncapi, .message, .email),
+[data-fullscreen="false"] figure,
+[data-fullscreen="false"] .bpmn {
+    background-color: var(--color-black-a05);
+    border-radius: var(--radius-base);
+}
+
+[data-fullscreen="true"] iframe:where(.message, .email) {
+    background-color: var(--color-black-a05);
+    min-height: 100vh;
+}
+
+[data-fullscreen] figure {
+    padding: var(--space-md);
+}
+
+[data-fullscreen="true"] {
+    background-color: #fff;
+    border-radius: 0;
+    height: 100%;
+    left: 0;
+    margin: 0;
+    overflow: auto;
+    padding: 0;
+    position: fixed;
+    scroll-behavior: smooth;
+    top: 0;
+    width: 100%;
+    z-index: var(--z-fullscreen);
+}
+
+[data-fullscreen="true"] header,
+[data-fullscreen="true"] footer {
+    position: fixed;
+    right: var(--space-md);
+}
+
+[data-fullscreen="true"] button {
+    --icon-padding: calc(var(--space-sm));
+    transform: none;
+}
+
+[data-fullscreen="false"] button::before,
+[data-fullscreen="false"] button::after {
+    transform: rotate(180deg);
+}
+
+[data-fullscreen="true"] figure {
+    float: none;
+    margin: var(--space-md);
+    padding: 0;
+    text-align: center;
+}
+
+[data-fullscreen="false"] figure svg,
+[data-fullscreen="false"] figure embed {
+    height: auto !important;
+}
+
+[data-fullscreen="true"] svg,
+[data-fullscreen="true"] embed {
+    max-width: none;
+}
+
+[data-fullscreen="true"] iframe:where(.openapi, .asyncapi, .message, .email),
+[data-fullscreen="true"] figure,
+[data-fullscreen="true"] .bpmn {
+    box-shadow: none;
+    margin: 0;
+    padding: 0;
+}
+
+[data-fullscreen="true"] figure,
+[data-fullscreen="true"] figure svg,
+[data-fullscreen="true"] figure embed {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+}
+
+[data-fullscreen="true"] figure svg,
+[data-fullscreen="true"] figure embed,
+[data-fullscreen="true"] figure svg *,
+[data-fullscreen="true"] figure embed * {
+    cursor: move;
+}
+
+[data-fullscreen="true"] iframe.openapi,
+[data-fullscreen="true"] iframe.asyncapi {
+    min-height: 100vh;
+}
+
+[data-fullscreen="true"] .bpmn > .bjs-container {
+    height: 100vh !important;
+}
+
+[data-fullscreen="true"] [data-toggle="fullscreen"] {
+    transform: none;
+}
+
+[data-fullscreen="true"] footer [data-toggle="fullscreen"] {
+    display: none;
+}

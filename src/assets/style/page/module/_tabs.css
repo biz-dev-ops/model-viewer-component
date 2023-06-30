@@ -1,0 +1,43 @@
+
+/* Module: Tabs */
+.tabs-container:not(:last-child) {
+    margin-bottom: var(--space-md);
+}
+
+.tabs-scroll-container {
+    color: var(--text-color-text);
+}
+
+.tabs-list-container ul {
+    background-color: var(--color-white);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs) var(--space-sm);
+    justify-content: flex-start;
+    list-style: none;
+    padding-left: 0;
+}
+
+.tabs-list-container ul li a {
+    border-bottom: var(--line-thin) solid var(--color-black-a10);
+    color: currentcolor;
+    display: block;
+    height: 100%;
+    padding:  var(--space-xs) var(--space-sm);
+    text-decoration: none;
+}
+
+.tabs-list-container ul li a:hover,
+.tabs-list-container ul li a:focus {
+    border-bottom-color: var(--link-text-color);
+}
+
+.tabs-list-container ul li a[aria-expanded="true"] {
+    border-bottom-color: currentcolor;
+    color: var(--link-text-color);
+    font-weight: 600;
+}
+
+.tabs-panels-container > div {
+    padding-top: var(--space-sm);
+}

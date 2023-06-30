@@ -1,0 +1,86 @@
+.ui {
+    border-radius: var(--radius-base);
+    border: var(--line-base) solid var(--background-color-base);
+    padding: calc(var(--space-md) - var(--line-base));
+    position: relative;
+    overflow: hidden;
+
+    box-shadow: var(--drop-shadow-level2);
+}
+
+.ui .action {
+    border: var(--line-base) solid var(--background-color-base);
+    padding: var(--space-md);
+}
+
+/*.ui .form-item,*/
+/*.ui .select-one-of {*/
+/*    margin-bottom: calc(var(--line-height-base) * 1rem);*/
+/*}*/
+
+.ui fieldset,
+.ui form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+}
+
+.ui .form-item > label {
+    display: inline-block;
+    margin-bottom: var(--space-xs);
+}
+
+.ui .fieldset-controls [data-fieldset-action='remove'] {
+    display: none;
+}
+
+.ui .form-item + .form-item + .fieldset-controls [data-fieldset-action='remove'] {
+    display: inline-block;
+}
+
+.ui .fieldset-controls {
+    padding-block-start: var(--space-sm);
+    display: flex;
+    gap: var(--space-xs);
+}
+
+.ui .form-check input + label {
+    margin-left: var(--space-xs);
+}
+
+.ui .form-submit {
+    display: flex;
+    gap: var(--space-xs);
+    justify-content: flex-end;
+}
+
+.ui button {
+    border-radius: var(--radius-pill);
+    padding-block: var(--space-xxs);
+}
+
+.ui dl dl {
+    padding-inline-start: var(--space-md);
+    margin-block: var(--space-sm);
+    border-left: var(--line-base) solid var(--color-grey-100);
+    margin-inline-start: var(--space-sm);
+}
+
+.ui dd {
+    border-bottom: none;
+}
+
+.ui dl dl dt {
+    position: relative;
+}
+
+.ui dl dl dt:before {
+    background-color: var(--color-grey-100);
+    content: '';
+    height: 1px;
+    width: var(--space-sm);
+    position: absolute;
+    top: calc(var(--line-height-base) / 2 * 1rem);
+    left: calc(var(--space-md) * -1);
+}
+

@@ -1,0 +1,26 @@
+{
+	"name": "model-viewer",
+	"main": "model-viewer.js",
+	"module": "model-viewer.js",
+	"type": "module",
+	"scripts": {
+		"develop": "webpack-dev-server --mode development",
+		"build": "webpack --mode production",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Sander Tiekstra",
+	"dependencies": {
+		"html-webpack-plugin": "^5.5.3",
+		"lit": "^2.7.5"
+	},
+	"devDependencies": {
+		"@webcomponents/webcomponentsjs": "^2.8.0",
+		"copy-webpack-plugin": "^11.0.0",
+		"minify-html-literals-loader": "^1.1.1",
+		"ts-loader": "^9.4.4",
+		"typescript": "^5.1.3",
+		"webpack": "^5.88.1",
+		"webpack-cli": "^5.1.4",
+		"webpack-dev-server": "^4.15.1"
+	}
+}
