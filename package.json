@@ -1,6 +1,6 @@
 {
 	"name": "@synion/model-viewer",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"description": "Webcomponent to translate any JSON schema into a model view.",
 	"keywords": [
 	  "jsonschema",
@@ -18,10 +18,12 @@
 	  "url": "https://github.com/synionnl/model-viewer/issues"
 	},
 	"homepage": "https://github.com/synionnl/model-viewer/blob/main/README.md",
-	"files": [
-	  "dist"
-	],
 	"type": "module",
+	"main": "dist/model-viewer.js",
+  	"module": "dist/model-viewer.js",
+	"files": [
+		"dist/"
+	],
 	"scripts": {
 		"develop": "webpack-dev-server --mode development",
 		"build": "webpack --mode production",
