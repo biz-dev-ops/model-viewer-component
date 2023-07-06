@@ -1,14 +1,32 @@
 {
-	"name": "model-viewer",
-	"main": "model-viewer.js",
-	"module": "model-viewer.js",
+	"name": "@synion/model-viewer",
+	"version": "0.0.1",
+	"description": "Webcomponent to translate any JSON schema into a model view.",
+	"keywords": [
+	  "jsonschema",
+	  "webcomponent",
+	  "html5",
+	  "model viewer"
+	],
+	"repository": {
+	  "type": "git",
+	  "url": "git+https://github.com/synionnl/model-viewer"
+	},
+	"author": "Sader Tiekstra",
+	"license": "Apache 2.0",
+	"bugs": {
+	  "url": "https://github.com/synionnl/model-viewer/issues"
+	},
+	"homepage": "https://github.com/synionnl/model-viewer/blob/main/README.md",
+	"files": [
+	  "dist"
+	],
 	"type": "module",
 	"scripts": {
 		"develop": "webpack-dev-server --mode development",
 		"build": "webpack --mode production",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
-	"author": "Sander Tiekstra",
 	"dependencies": {
 		"html-webpack-plugin": "^5.5.3",
 		"lit": "^2.7.5"
