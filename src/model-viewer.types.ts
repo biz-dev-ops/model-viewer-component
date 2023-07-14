@@ -6,7 +6,7 @@ export type PathItem = {
 };
 
 export type ModelItem = {
-    title?: string;
+    title: string;
     type: string;
     properties: {[key: string]: ModelItem};
     oneOf: ModelItem[];

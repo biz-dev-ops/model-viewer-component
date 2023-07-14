@@ -286,7 +286,9 @@ export class ModelViewer extends LitElement {
 
   @property()
   override id!: string;
-  name!: string;
+  
+  @property()
+  name?: string;
   
   @state()
   path: PathItem[] = [];
@@ -528,9 +530,9 @@ export class ModelViewer extends LitElement {
           <li>
             ${!itemsItemTypeIsValue ?
               html`
-            <button type="button" class="button--object" @click="${() => { this.selectArrayItem(property, item); }}">
-              <span class="txt--property">${item.items.title}</span>
-          </button>
+                <button type="button" class="button--object" @click="${() => { this.selectArrayItem(property, item); }}">
+                  <span class="txt--property">${item.items.title}</span>
+                </button>
               ` :
               this.renderValue(itemsItemProperty, item.items, this.getRequired(item.items, itemsItemProperty))
             }
@@ -538,9 +540,9 @@ export class ModelViewer extends LitElement {
           <li>
             ${!itemsItemTypeIsValue ?
               html`
-            <button type="button" class="button--object" disabled>
-              <span class="txt--property">${item.items.title}</span>
-          </button>
+                <button type="button" class="button--object" disabled>
+                  <span class="txt--property">${item.items.title}</span>
+                </button>
               ` :
               this.renderValue(itemsItemProperty, item.items, this.getRequired(item.items, itemsItemProperty))
             }
