@@ -498,6 +498,9 @@ export class ModelViewer extends LitElement {
 
   renderArray(property: string, item: ModelItem, required: boolean): TemplateResult {
     const uId = this.getUId('popover');
+    const itemsItemType = this.getItemType(item.items);
+    const itemsItemProperty = item.items.title || item.items.type;
+    const itemsItemTypeIsValue = itemsItemType === 'string' || itemsItemType === 'number' || itemsItemType === 'integer';
 
     return html`
       <div class="item item--array">
@@ -523,14 +526,25 @@ export class ModelViewer extends LitElement {
         
         <ul class="list--array">
           <li>
+            ${!itemsItemTypeIsValue ?
+              html`
             <button type="button" class="button--object" @click="${() => { this.selectArrayItem(property, item); }}">
               <span class="txt--property">${item.items.title}</span>
           </button>
+              ` :
+              this.renderValue(itemsItemProperty, item.items, this.getRequired(item.items, itemsItemProperty))
+            }
           </li>
           <li>
+            ${!itemsItemTypeIsValue ?
+              html`
             <button type="button" class="button--object" disabled>
               <span class="txt--property">${item.items.title}</span>
           </button>
+              ` :
+              this.renderValue(itemsItemProperty, item.items, this.getRequired(item.items, itemsItemProperty))
+            }
+            
           </li>
         </ul>
 
