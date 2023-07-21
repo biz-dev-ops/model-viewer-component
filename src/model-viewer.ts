@@ -297,7 +297,7 @@ export class ModelViewer extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-    this.setPath(this.id, this.modelViewer[this.id], this.name);
+    this.setPath('', this.modelViewer[this.id], this.name || this.modelViewer[this.id].title);
   }
 
   override render() {
@@ -309,7 +309,8 @@ export class ModelViewer extends LitElement {
       required = this.getRequired(parentItem, property)
     }
 
-    const title = this.path[this.path.length - 1].property || this.path[this.path.length - 1].title;
+    const title = this.path[this.path.length - 1].title;
+    const property = this.path[this.path.length - 1].property;
     const item = this.path[this.path.length - 1].item;
 
     return html`
@@ -318,8 +319,8 @@ export class ModelViewer extends LitElement {
           ${this.path.map((path: PathItem, index) => this.renderPathItem(path, index))}
         </ol>
       </nav>
-      <main>  
-        ${this.renderItem(title, item, required, true)}
+      <main>
+        ${this.renderItem(property, title, item, required, true)}
       </main>
     `;
   }
@@ -373,55 +374,58 @@ export class ModelViewer extends LitElement {
     `
   }
 
-  renderItem(property: string, item: ModelItem, required = false, root = false) {
+  renderItem(property: string, title: string | undefined, item: ModelItem, required = false, root = false) {
     const type = this.getItemType(item);
     switch(type) {
       case 'object':
-        return this.renderObject(property, item, required, root);
+        return this.renderObject(property, title, item, required, root);
       
       case 'string':
-        return this.renderValue(property, item, required);
+        return this.renderValue(property, title, item, required);
       
       case 'number':
-        return this.renderValue(property, item, required);
+        return this.renderValue(property, title, item, required);
       
       case 'integer':
-        return this.renderValue(property, item, required);
+        return this.renderValue(property, title, item, required);
       
       case 'boolean':
-        return this.renderBoolean(property, item);
+        return this.renderBoolean(property, title, item);
       
       case 'array':
-        return this.renderArray(property, item, required);
+        return this.renderArray(property, title, item, required);
       
       case 'oneOf':
-        return this.renderOneOf(item.oneOf);
+        if (root) {
+          return this.renderOneOf(property, title, item.oneOf);
+        } else {
+          return this.renderObject(property, title, item, required, root);
+        }
     }
 
     return;
   }
   
-  renderObject(property: string, item: ModelItem, required: boolean, root: boolean): TemplateResult {
+  renderObject(property: string, title: string | undefined, item: ModelItem, required: boolean, root: boolean): TemplateResult {
     const properties = [];
     for (const property in item.properties) {
       const requiredItem = this.getRequired(item, property);
+      const propertyItem = item.properties[property];
       properties.push(html`
-        ${this.renderItem(property, item.properties[property], requiredItem)}
+        ${this.renderItem(property, propertyItem.title, propertyItem, requiredItem)}
       `);
     }
 
     return root ? 
       html`
         <div class="item item--object">
-          ${
-            property ?
-            html`
-              <h2>
-                ${property}
-                ${required ? html`<span class="txt--required">*</span>`: ``}
-              </h2>
-            ` : null
-          }
+          <h2>
+            <span class="txt--property">
+              ${title || property}
+              ${required ? html`<span class="txt--required">*</span>`: ``}
+            <span>
+          </h2>
+          
           ${
             item.description ?
             html`<p>${item.description}</p>` : null
@@ -434,12 +438,12 @@ export class ModelViewer extends LitElement {
       ` :
       html`
         <div class="item item--object">
-          <button type="button" class="button--object" @click="${() => { this.selectObject(property, item); }}"><span class="txt--property">${property} ${required ? html`<span class="txt--required">*</span>`: ``}</span></button>
+          <button type="button" class="button--object" @click="${() => { this.selectObject(property, item); }}"><span class="txt--property">${title || property} ${required ? html`<span class="txt--required">*</span>`: ``}</span></button>
         </div>
       `;
   }
 
-  renderValue(property: string, item: ModelItem, required: boolean): TemplateResult {
+  renderValue(property: string, title: string | undefined, item: ModelItem, required: boolean): TemplateResult {
     const properties = [];
     const uId = this.getUId('popover');
     for (const property in item) {
@@ -454,8 +458,8 @@ export class ModelViewer extends LitElement {
     return html`
       <div class="item item--value">
         <h3>
-          <span>
-            ${property}
+          <span class="txt--property">
+            ${title || property}
             ${required ? html`<span class="txt--required">*</span>`: ``}
           </span>
           ${
@@ -488,27 +492,28 @@ export class ModelViewer extends LitElement {
     `
   }
 
-  renderBoolean(property: string, item: ModelItem): TemplateResult {
+  renderBoolean(property: string, title: string | undefined, item: ModelItem): TemplateResult {
     return html`
       <details>
-        <summary>${property || item.title} / type: ${item.type}</summary>
+        <summary>${title || property } / type: ${item.type}</summary>
         <p>${item.description}</p>
         <pre>${JSON.stringify(item, null, 2)}</pre>
       </details>
     `;
   }
 
-  renderArray(property: string, item: ModelItem, required: boolean): TemplateResult {
+  renderArray(property: string, title: string | undefined, item: ModelItem, required: boolean): TemplateResult {
     const uId = this.getUId('popover');
     const itemsItemType = this.getItemType(item.items);
     const itemsItemProperty = item.items.title || item.items.type;
     const itemsItemTypeIsValue = itemsItemType === 'string' || itemsItemType === 'number' || itemsItemType === 'integer';
+    const renderValue = this.renderValue(item.items.type, item.items.title, item.items, this.getRequired(item.items, itemsItemProperty))
 
     return html`
       <div class="item item--array">
         <h3>
-          <span>
-            ${item.title || property} ${required ? html`<span class="txt--required">*</span>`: ``}
+          <span class="txt--property">
+            ${title || property} ${required ? html`<span class="txt--required">*</span>`: ``}
           </span>
           ${
             item.description ?
@@ -534,7 +539,7 @@ export class ModelViewer extends LitElement {
                   <span class="txt--property">${item.items.title}</span>
                 </button>
               ` :
-              this.renderValue(itemsItemProperty, item.items, this.getRequired(item.items, itemsItemProperty))
+              renderValue
             }
           </li>
           <li>
@@ -544,7 +549,7 @@ export class ModelViewer extends LitElement {
                   <span class="txt--property">${item.items.title}</span>
                 </button>
               ` :
-              this.renderValue(itemsItemProperty, item.items, this.getRequired(item.items, itemsItemProperty))
+              renderValue
             }
             
           </li>
@@ -555,7 +560,7 @@ export class ModelViewer extends LitElement {
     `;
   }
 
-  renderOneOf(items: ModelItem[]): TemplateResult {
+  renderOneOf(property: string, title: string | undefined, items: ModelItem[]): TemplateResult {
     const oneOf = [];
 
     for (const item of items) {
@@ -589,6 +594,10 @@ export class ModelViewer extends LitElement {
 
     return html`
       <div class="item item--one-of">
+        <h2>
+          <span class="txt--property">${title || property}<span>
+        </h2>
+
         <ul class="list--one-of">
           ${oneOf}
         </ul>
