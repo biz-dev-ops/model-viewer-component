@@ -1,6 +1,6 @@
 {
 	"name": "@synion/model-viewer",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Webcomponent to translate any JSON schema into a model view.",
 	"keywords": [
 		"jsonschema",
