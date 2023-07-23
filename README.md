@@ -32,7 +32,7 @@ The JSON-schema model, must be set via JavaScript.
 
 ## Examples
 
-### HTMl
+### HTML
 
 ```html
 <model-viewer 
@@ -47,7 +47,7 @@ The JSON-schema model, must be set via JavaScript.
 <model-viewer id="trainset" />
 
 <script>
-	document.getElementById('trainset').model = {
+    document.getElementById('trainset').model = {
     	...
     }
 <script>
