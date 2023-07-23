@@ -1,6 +1,9 @@
 # Model Viewer for [md-docs](https://github.com/synionnl/md-docs-cli)
 
+HTML5 web component which renders every JSON-schema object into a human-readable and -understandable form.
+
 ## Installation
+
 `npm install --save @synion/model-viewer`
 
 ## Usage
@@ -13,25 +16,42 @@
 
 ### id
 
-*Required*  
 The id attribute identifies the property within the `window.modelViewer`. 
 
+### title
 
-### name
-*Optional*  
-The name attribute is a human readable title fallback. Only used when the model doesn't provide a title.
+The title attribute is a human-readable title fallback. Only used when the model doesn't provide a title.
 
-## Example
+### data-json
+
+A HTML escaped version of the JSON-schema model.
+
+### model
+
+The JSON-schema model, must be set via JavaScript.
+
+## Examples
+
+### HTMl
 
 ```html
+<model-viewer 
+    id="trainset"
+    title="a title"
+    data-json="{ &quot;key &quot;: &quot;value &quot; }" />
+```
+
+### HTML and JavaScript
+
+```html
+<model-viewer 
+    id="trainset"
+    title="a title"
+    data-json="{ &quot;key &quot;: &quot;value &quot; }" />
+
 <script>
-	window.modelViewer = window.modelViewer || {};
-    window.modelViewer['trainset'] = {
+	document.getElementById('trainset').model = {
     	...
     }
 <script>
-```
-
-```html
-<model-viewer id="trainset"></model-viewer>
 ```

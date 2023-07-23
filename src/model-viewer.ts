@@ -7,300 +7,34 @@ import resetStyles from './modules/resetStyles';
 
 @customElement('model-viewer')
 export class ModelViewer extends LitElement {
-  static override get styles() {
-    const styles =  css`
-        :host {
-          --item-line-color: var(--color-brand-base);
-          --button-hover-color: var(--color-brand-a10);
+  @property() 
+  override title!: string
 
-          border: var(--line-base) solid var(--color-brand-a40);
-          padding: var(--space-md);
-          display: block;
-          border-radius: var(--radius-base);
-          font-size: var(--font-size-sm);
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-md);
-        }
+  @property() 
+  model!: ModelItem
 
-        :where(h1, h2, h3, h4, p, ul, ol, dl):first-child {
-          margin-block-start: 0;
-        }
+  @property({ attribute: "data-json" })
+  dataJson!: string
 
-        :where(h1, h2, h3, h4, p, ul, ol, dl):last-child {
-          margin-block-end: 0;
-        }
-
-        h3 {
-          column-gap: var(--space-xs);
-          display: flex;
-          font-size: var(--font-size-sm);
-        }
-
-        ul, ol {
-          margin: 0;
-        }
-
-        dt {
-          color: rgba(0 0 0 / 50%);
-          font-weight: 600;
-        }
-
-        dd {
-          margin-inline-start: 0
-        }
-
-        dd + dt {
-          margin-block-start: 1em;
-        }
-
-        button {
-          background-color: transparent;
-          border: var(--line-base) solid var(--item-line-color);
-          border-radius: var(--radius-half);
-          color: var(--button-text-color);
-          min-height: var(--space-lg);
-          padding: var(--space-sm) var(--space-sm);
-          text-decoration: none;
-          transition: all var(--duration-base);
-        }
-
-        button[disabled] {
-          pointer-event: none;
-        }
-
-        :is(button:not([disabled])):is(:active, :hover, :focus-visible) {
-          background-color: var(--button-hover-color);
-          color: var(--button-text-color-active);
-        }
-
-        .icon--type {
-          margin-inline-start: auto;
-          font-size: var(--font-size-xs);
-          background-color: var(--main-surface);
-          border-radius: var(--radius-pill);
-          align-self: center;
-          padding: var(--space-xxs) var(--space-xs);
-        }
-
-        .icon--type em {
-          font-style: normal;
-          font-weight: 400;
-        }
-
-        .button--object {
-          align-items: center;
-          display: flex;
-          justify-content: space-between;
-          column-gap: var(--space-xs);
-          inline-size: 100%;
-        }
-
-        .button--object::after {
-          content: "";
-          display: inline-block;
-          border-color: currentColor;
-          border-width:var(--line-thin) var(--line-thin) 0 0;
-          border-style: solid;
-          height: var(--space-xs);
-          width: var(--space-xs);
-          position: relative;
-          top: calc(var(--space-xxs) / -2);
-          transform: rotate(45deg);
-          justify-self: end;
-          transition: transform var(--duration-base);
-          transform-origin: 30% 70%;
-          justify-self: flex-end;
-        }
-
-        .button-label {
-          display: flex;
-          column-gap: var(--space-xs);
-        }
-
-        .popover-control--info {
-          background-color: var(--color-white);
-          align-self: center;
-          border: var(--line-base) solid var(--button-background-base);
-          border-radius: var(--radius-circle);
-          block-size: var(--font-size-base);
-          font-size: var(--font-size-xs);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          aspect-ratio: 1;
-          text-decoration: none;
-        }
-
-        .popover-control--info abbr[title] {
-          border: 0;
-          line-height: 1em;
-          text-decoration: none;
-          font-weight: 600;
-        }
-
-        .txt--property {
-          font-weight: 600;
-        }
-
-        .txt--required {
-          color: var(--color-error);
-        }
-
-        .list--path {
-          display: flex;
-          gap: var(--space-xs);
-          padding-inline-start: 0;
-          list-style: none;
-          align-items: center;
-          flex-wrap: wrap
-        }
-
-        .list--path li {
-          display: flex;
-          column-gap: var(--space-xs);
-          align-items: center;
-        }
-
-        .list--path li:not(:last-child, .oneof)::after {
-          content: ' /';
-        }
-
-        .list--path li.oneof button::after {
-          content: ':';
-        }
-
-        .list--path li.oneof + .object button {
-          margin-inline-start: calc(var(--space-xxs) * -1);
-        }
-
-        .list--path button {
-          padding: var(--space-xs);
-        }
-
-        .list--path li > span {
-          padding-block: calc(var(--line-base) + var(--space-sm));
-        }
-
-        .list--one-of,
-        .list--array {
-          list-style: none;
-          padding-inline-start: 0;
-          display: flex;
-          flex-direction: column;
-          row-gap: var(--space-sm);
-        }
-
-        .list--one-of {
-
-          row-gap: var(--space-xxs);
-        }
-
-        .list--one-of li {
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          row-gap: var(--space-xxs);
-        }
-
-        .list--one-of li:not(:last-child)::after {
-          content: 'OR';
-          font-size: var(--font-size-xs);
-          text-align: center;
-          display: block;
-          color: var(--color-black-a40);
-          font-weight: 600;
-        }
-
-        .list--array li {
-          position: relative;
-        }
-        
-        .list--array li::before,
-        .list--array li::after {
-          content: '';
-          position: absolute;
-          inset-inline-start: calc(var(--space-sm) * -1);
-          inset-block-start: calc(var(--space-sm) + var(--space-xxs));
-        }
-
-        .list--array li::before {
-          background-color: var(--item-line-color);
-          block-size: var(--line-thin);
-          inline-size: var(--space-sm);
-        }
-        
-        .list--array li::after {
-          aspect-ratio: 1;
-          background-color: var(--main-surface);
-          block-size: .625rem;
-          border-radius: var(--radius-circle);
-          border: var(--line-thin) solid var(--item-line-color);
-          transform: translateX(-.4375rem) translateY(-.25rem);
-        }
-
-        [popover] {
-          box-shadow: var(--drop-shadow-level2);
-          border: 0;
-          border-radius: var(--radius-base);
-          inset: unset;
-          margin-top: var(--space-xs);
-          padding: var(--space-sm);
-          position: absolute;
-          transition: border var(--duration-base);
-        }
-
-        [popover]::backdrop {
-          background-color: rgba(0 0 0 / 5%);
-        }
-
-        :is(button:not([disabled])):is(:active, :hover, :focus-visible) + [popover] {
-          border-color: var(--button-background-active)
-        }
-
-        .items {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-md);
-        }
-
-        .item--value {
-          background-color: var(--color-black-a05);
-          border-radius: var(--radius-half);
-          padding: var(--space-sm);
-        }
-
-        .item--array {
-          border-radius: var(--radius-half);
-          border: var(--line-thin) solid var(--item-line-color);
-          padding: var(--space-sm);
-          padding-block-end: 0;
-          margin-block-end: calc(var(--space-xs) * -1);
-          mask-image: linear-gradient(to top, transparent var(--space-sm), black var(--space-xl));
-          -webkit-mask-image: linear-gradient(to top, transparent var(--space-sm), black var(--space-xl));
-        }
-    `;
-
-    return [resetStyles, styles];
-  }
-
-  @property()
-  override id!: string;
-  
-  @property()
-  name?: string;
-  
   @state()
   path: PathItem[] = [];
   uid: number = 999;
-  modelViewer: {[key: string]: ModelItem} = (window as any).modelViewer;
 
-  override connectedCallback() {
-    super.connectedCallback();
-    this.setPath('', this.modelViewer[this.id], this.name || this.modelViewer[this.id].title);
+  override update(changedProperties: Map<string, unknown>) {
+    this.path = [];
+
+    if(changedProperties.has("dataJson")) {
+      this.model = JSON.parse(this.dataJson);
+    }
+      
+    this.setPath('', this.model, this.title || this.model?.title);
+    super.update(changedProperties);
   }
 
   override render() {
+    if(this.path.length === 0)
+      return '';
+
     let required = false;
 
     if (this.path.length > 1) {
@@ -666,6 +400,10 @@ export class ModelViewer extends LitElement {
   }
 
   setPath(property: string, item: ModelItem, name: string | undefined = undefined) {
+    if(item === undefined) {
+      return;
+    }
+
     const type = this.getItemType(item);
     const title = name || item.title || property;
     this.path = [...this.path, {property, title, item, type}];
@@ -673,5 +411,282 @@ export class ModelViewer extends LitElement {
 
   gotoPathItem(index: number) {
     this.path = this.path.slice(0, index + 1);
+  }
+
+  static override get styles() {
+    const styles =  css`
+        :host {
+          --item-line-color: var(--color-brand-base);
+          --button-hover-color: var(--color-brand-a10);
+
+          border: var(--line-base) solid var(--color-brand-a40);
+          padding: var(--space-md);
+          display: block;
+          border-radius: var(--radius-base);
+          font-size: var(--font-size-sm);
+          display: flex;
+          flex-direction: column;
+          gap: var(--space-md);
+        }
+
+        :where(h1, h2, h3, h4, p, ul, ol, dl):first-child {
+          margin-block-start: 0;
+        }
+
+        :where(h1, h2, h3, h4, p, ul, ol, dl):last-child {
+          margin-block-end: 0;
+        }
+
+        h3 {
+          column-gap: var(--space-xs);
+          display: flex;
+          font-size: var(--font-size-sm);
+        }
+
+        ul, ol {
+          margin: 0;
+        }
+
+        dt {
+          color: rgba(0 0 0 / 50%);
+          font-weight: 600;
+        }
+
+        dd {
+          margin-inline-start: 0
+        }
+
+        dd + dt {
+          margin-block-start: 1em;
+        }
+
+        button {
+          background-color: transparent;
+          border: var(--line-base) solid var(--item-line-color);
+          border-radius: var(--radius-half);
+          color: var(--button-text-color);
+          min-height: var(--space-lg);
+          padding: var(--space-sm) var(--space-sm);
+          text-decoration: none;
+          transition: all var(--duration-base);
+        }
+
+        button[disabled] {
+          pointer-event: none;
+        }
+
+        :is(button:not([disabled])):is(:active, :hover, :focus-visible) {
+          background-color: var(--button-hover-color);
+          color: var(--button-text-color-active);
+        }
+
+        .icon--type {
+          margin-inline-start: auto;
+          font-size: var(--font-size-xs);
+          background-color: var(--main-surface);
+          border-radius: var(--radius-pill);
+          align-self: center;
+          padding: var(--space-xxs) var(--space-xs);
+        }
+
+        .icon--type em {
+          font-style: normal;
+          font-weight: 400;
+        }
+
+        .button--object {
+          align-items: center;
+          display: flex;
+          justify-content: space-between;
+          column-gap: var(--space-xs);
+          inline-size: 100%;
+        }
+
+        .button--object::after {
+          content: "";
+          display: inline-block;
+          border-color: currentColor;
+          border-width:var(--line-thin) var(--line-thin) 0 0;
+          border-style: solid;
+          height: var(--space-xs);
+          width: var(--space-xs);
+          position: relative;
+          top: calc(var(--space-xxs) / -2);
+          transform: rotate(45deg);
+          justify-self: end;
+          transition: transform var(--duration-base);
+          transform-origin: 30% 70%;
+          justify-self: flex-end;
+        }
+
+        .button-label {
+          display: flex;
+          column-gap: var(--space-xs);
+        }
+
+        .popover-control--info {
+          background-color: var(--color-white);
+          align-self: center;
+          border: var(--line-base) solid var(--button-background-base);
+          border-radius: var(--radius-circle);
+          block-size: var(--font-size-base);
+          font-size: var(--font-size-xs);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          aspect-ratio: 1;
+          text-decoration: none;
+        }
+
+        .popover-control--info abbr[title] {
+          border: 0;
+          line-height: 1em;
+          text-decoration: none;
+          font-weight: 600;
+        }
+
+        .txt--property {
+          font-weight: 600;
+        }
+
+        .txt--required {
+          color: var(--color-error);
+        }
+
+        .list--path {
+          display: flex;
+          gap: var(--space-xs);
+          padding-inline-start: 0;
+          list-style: none;
+          align-items: center;
+          flex-wrap: wrap
+        }
+
+        .list--path li {
+          display: flex;
+          column-gap: var(--space-xs);
+          align-items: center;
+        }
+
+        .list--path li:not(:last-child, .oneof)::after {
+          content: ' /';
+        }
+
+        .list--path li.oneof button::after {
+          content: ':';
+        }
+
+        .list--path li.oneof + .object button {
+          margin-inline-start: calc(var(--space-xxs) * -1);
+        }
+
+        .list--path button {
+          padding: var(--space-xs);
+        }
+
+        .list--path li > span {
+          padding-block: calc(var(--line-base) + var(--space-sm));
+        }
+
+        .list--one-of,
+        .list--array {
+          list-style: none;
+          padding-inline-start: 0;
+          display: flex;
+          flex-direction: column;
+          row-gap: var(--space-sm);
+        }
+
+        .list--one-of {
+
+          row-gap: var(--space-xxs);
+        }
+
+        .list--one-of li {
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          row-gap: var(--space-xxs);
+        }
+
+        .list--one-of li:not(:last-child)::after {
+          content: 'OR';
+          font-size: var(--font-size-xs);
+          text-align: center;
+          display: block;
+          color: var(--color-black-a40);
+          font-weight: 600;
+        }
+
+        .list--array li {
+          position: relative;
+        }
+        
+        .list--array li::before,
+        .list--array li::after {
+          content: '';
+          position: absolute;
+          inset-inline-start: calc(var(--space-sm) * -1);
+          inset-block-start: calc(var(--space-sm) + var(--space-xxs));
+        }
+
+        .list--array li::before {
+          background-color: var(--item-line-color);
+          block-size: var(--line-thin);
+          inline-size: var(--space-sm);
+        }
+        
+        .list--array li::after {
+          aspect-ratio: 1;
+          background-color: var(--main-surface);
+          block-size: .625rem;
+          border-radius: var(--radius-circle);
+          border: var(--line-thin) solid var(--item-line-color);
+          transform: translateX(-.4375rem) translateY(-.25rem);
+        }
+
+        [popover] {
+          box-shadow: var(--drop-shadow-level2);
+          border: 0;
+          border-radius: var(--radius-base);
+          inset: unset;
+          margin-top: var(--space-xs);
+          padding: var(--space-sm);
+          position: absolute;
+          transition: border var(--duration-base);
+        }
+
+        [popover]::backdrop {
+          background-color: rgba(0 0 0 / 5%);
+        }
+
+        :is(button:not([disabled])):is(:active, :hover, :focus-visible) + [popover] {
+          border-color: var(--button-background-active)
+        }
+
+        .items {
+          display: flex;
+          flex-direction: column;
+          gap: var(--space-md);
+        }
+
+        .item--value {
+          background-color: var(--color-black-a05);
+          border-radius: var(--radius-half);
+          padding: var(--space-sm);
+        }
+
+        .item--array {
+          border-radius: var(--radius-half);
+          border: var(--line-thin) solid var(--item-line-color);
+          padding: var(--space-sm);
+          padding-block-end: 0;
+          margin-block-end: calc(var(--space-xs) * -1);
+          mask-image: linear-gradient(to top, transparent var(--space-sm), black var(--space-xl));
+          -webkit-mask-image: linear-gradient(to top, transparent var(--space-sm), black var(--space-xl));
+        }
+    `;
+
+    return [resetStyles, styles];
   }
 }
