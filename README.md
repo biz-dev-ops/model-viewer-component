@@ -24,11 +24,11 @@ The title attribute is a human-readable title fallback. Only used when the model
 
 ### data-json
 
-An html escaped version of the JSON-schema model.
+A HTML escaped version of the JSON-schema model.
 
 ### model
 
-The json-schema model, must be set via JavaScript.
+The JSON-schema model, must be set via JavaScript.
 
 ## Examples
 
