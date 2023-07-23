@@ -8,7 +8,7 @@ import resetStyles from './modules/resetStyles';
 @customElement('model-viewer')
 export class ModelViewer extends LitElement {
   @property() 
-  override title!: string
+  name!: string
 
   @property() 
   model!: ModelItem
@@ -19,17 +19,6 @@ export class ModelViewer extends LitElement {
   @state()
   path: PathItem[] = [];
   uid: number = 999;
-
-  override update(changedProperties: Map<string, unknown>) {
-    this.path = [];
-
-    if(changedProperties.has("dataJson")) {
-      this.model = JSON.parse(this.dataJson);
-    }
-      
-    this.setPath('', this.model, this.title || this.model?.title);
-    super.update(changedProperties);
-  }
 
   override render() {
     if(this.path.length === 0)
@@ -57,6 +46,24 @@ export class ModelViewer extends LitElement {
         ${this.renderItem(property, title, item, required, true)}
       </main>
     `;
+  }
+
+  override update(changedProperties: Map<string, unknown>) {
+    if(changedProperties.has("dataJson")) {
+      this.path = [];
+      this.model = JSON.parse(this.dataJson);
+      this.setPath('', this.model, this.model?.title || this.name);
+    }
+    else if(changedProperties.has("model")) {
+      this.path = [];
+      this.setPath('', this.model, this.model?.title || this.name);
+    }
+    
+    super.update(changedProperties);
+  }
+
+  override updated() {
+    this.shadowRoot?.querySelector('main')?.focus();
   }
 
   getItemType(item: ModelItem) {
@@ -182,9 +189,10 @@ export class ModelViewer extends LitElement {
     const uId = this.getUId('popover');
     for (const property in item) {
       if (property !== 'description' && property !== 'title' && property !== 'type' && property !== 'format') {
+        const value = Array.isArray(item[property]) ? item[property].join(", ") : item[property];
         properties.push(html`
           <dt>${property}</dt>
-          <dd>${item[property]}</dd>
+          <dd>${value}</dd>
         `);
       }
     }
@@ -384,8 +392,11 @@ export class ModelViewer extends LitElement {
 
     if (target) {
       this.positionPopover(control, target as HTMLElement);
-      // @ts-ignore
-      target.showPopover();
+      try {
+        // @ts-ignore
+        target.showPopover();
+      }
+      catch {}
     }
   }
 
@@ -394,8 +405,11 @@ export class ModelViewer extends LitElement {
     const target = this.renderRoot.querySelector(`#${targetId}`);
 
     if (target) {
-      // @ts-ignore
-      target.hidePopover();
+      try {
+        // @ts-ignore
+        target.hidePopover();
+      }
+      catch {}
     }
   }
 

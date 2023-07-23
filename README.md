@@ -18,9 +18,9 @@ HTML5 web component which renders every JSON-schema object into a human-readable
 
 The id attribute identifies the property within the `window.modelViewer`. 
 
-### title
+### name
 
-The title attribute is a human-readable title fallback. Only used when the model doesn't provide a title.
+The name attribute is a human-readable name fallback. Only used when the model doesn't provide a title.
 
 ### data-json
 
@@ -37,7 +37,7 @@ The JSON-schema model, must be set via JavaScript.
 ```html
 <model-viewer 
     id="trainset"
-    title="a title"
+    name="a name"
     data-json="{ &quot;key &quot;: &quot;value &quot; }" />
 ```
 
