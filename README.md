@@ -44,10 +44,7 @@ The JSON-schema model, must be set via JavaScript.
 ### HTML and JavaScript
 
 ```html
-<model-viewer 
-    id="trainset"
-    title="a title"
-    data-json="{ &quot;key &quot;: &quot;value &quot; }" />
+<model-viewer id="trainset" />
 
 <script>
 	document.getElementById('trainset').model = {
