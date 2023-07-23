@@ -63,7 +63,7 @@ export class ModelViewer extends LitElement {
   }
 
   override updated() {
-    this.shadowRoot?.querySelector('main')?.focus();
+    this.shadowRoot?.querySelector('nav')?.scrollIntoView();
   }
 
   getItemType(item: ModelItem) {
