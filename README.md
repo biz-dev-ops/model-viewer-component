@@ -2,10 +2,6 @@
 
 HTML5 web component which renders every JSON-schema object into a human-readable and -understandable form.
 
-## Installation
-
-`npm install --save @synion/model-viewer`
-
 ## Usage
 
 - Add `model-viewer.js` to the webpage
