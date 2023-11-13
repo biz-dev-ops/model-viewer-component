@@ -44,7 +44,7 @@ The JSON-schema model, must be set via JavaScript.
 
 <script>
     document.getElementById('trainset').model = {
-    	...
+    	json-schema...
     }
 <script>
 ```
