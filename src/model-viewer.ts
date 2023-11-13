@@ -13,8 +13,8 @@ export class ModelViewer extends LitElement {
   @property() 
   model!: ModelItem
 
-  @property({ attribute: "data-json" })
-  dataJson!: string
+  @property({ attribute: "model-json" })
+  modelJson!: string
 
   @state()
   path: PathItem[] = [];
@@ -49,9 +49,9 @@ export class ModelViewer extends LitElement {
   }
 
   override update(changedProperties: Map<string, unknown>) {
-    if(changedProperties.has("dataJson")) {
+    if(changedProperties.has("modelJson")) {
       this.path = [];
-      this.model = JSON.parse(this.dataJson);
+      this.model = JSON.parse(this.modelJson);
       this.setPath('', this.model, this.model?.title || this.name);
     }
     else if(changedProperties.has("model")) {

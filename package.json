@@ -1,6 +1,6 @@
 {
 	"name": "@biz-dev-ops/model-viewer-component",
-	"version": "0.1.5",
+	"version": "0.2.0",
 	"description": "Webcomponent to translate any JSON schema into a model view.",
 	"keywords": [
 		"jsonschema",
