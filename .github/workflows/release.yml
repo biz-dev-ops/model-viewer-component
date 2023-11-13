@@ -68,7 +68,7 @@ jobs:
       
       - name: change name
         run: |
-          npm pkg set 'name'='@biz-dev-ops/model-viewer'
+          npm pkg set 'name'='@synion/model-viewer'
           
       - name: npm publish
         if: ${{ steps.version.outputs.value != steps.tag_version.outputs.tag }}
