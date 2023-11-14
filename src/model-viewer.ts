@@ -6,7 +6,7 @@ import { ModelItem, PathItem } from './model-viewer.types';
 import resetStyles from './modules/resetStyles';
 
 @customElement('model-viewer')
-export class ModelViewer extends LitElement {
+export class ModelViewerComponent extends LitElement {
   @property() 
   name!: string
 
