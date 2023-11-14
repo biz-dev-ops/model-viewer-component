@@ -1,6 +1,6 @@
 {
-	"name": "@synion/model-viewer",
-	"version": "0.1.4",
+	"name": "@biz-dev-ops/model-viewer-component",
+	"version": "0.2.0",
 	"description": "Webcomponent to translate any JSON schema into a model view.",
 	"keywords": [
 		"jsonschema",
@@ -31,7 +31,7 @@
 	},
 	"dependencies": {
 		"html-webpack-plugin": "^5.5.3",
-		"lit": "^2.7.5"
+		"lit": "^3.0.2"
 	},
 	"devDependencies": {
 		"@webcomponents/webcomponentsjs": "^2.8.0",
