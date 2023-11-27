@@ -1,16 +1,18 @@
-import { html, css, LitElement, TemplateResult } from 'lit';
+import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
 import { ModelItem, PathItem } from './model-viewer.types';
-import resetStyles from './modules/resetStyles';
+import modelViewerCss from './model-viewer.css';
+import "./components/ui/button/button";
+import "./components/ui/popover/popover";
 
 @customElement('model-viewer')
 export class ModelViewer extends LitElement {
   @property() 
   name!: string
 
-  @property() 
+  @property({type: Object}) 
   model!: ModelItem
 
   @property({ attribute: "data-json" })
@@ -95,21 +97,22 @@ export class ModelViewer extends LitElement {
   }
 
   renderPathItem(path: PathItem, index: number) {
+    const item = html`<span class="txt--property">${path.title}</span>`;
+    
     return html`
       <li class="${ifDefined(path.type?.toLowerCase())}">
         ${
           path.type !== 'array' ?
           html`
-            <button
-              type="button"
+            <bdo-button
               class="button--path"
               .disabled="${index + 1 === this.path.length}"
-              @click="${() => { this.gotoPathItem(index); }}"
+              @clicked="${() => { this.gotoPathItem(index); }}"
             >
-              <span class="txt--property">${path.title}</span>
-            </button>
+              ${item}
+            </bdo-button>
           ` :
-          html`<span class="txt--property">${path.title}</span>`
+          item
         }
       </li>
     `
@@ -179,7 +182,9 @@ export class ModelViewer extends LitElement {
       ` :
       html`
         <div class="item item--object">
-          <button type="button" class="button--object" @click="${() => { this.selectObject(property, item); }}"><span class="txt--property">${title || property} ${required ? html`<span class="txt--required">*</span>`: ``}</span></button>
+          <bdo-button type="button" direction="right" @clicked="${() => { this.selectObject(property, item); }}">
+            <span class="txt--property">${title || property} ${required ? html`<span class="txt--required">*</span>`: ``}</span>
+          </bdo-button>
         </div>
       `;
   }
@@ -211,8 +216,8 @@ export class ModelViewer extends LitElement {
                 href="#${uId}"
                 class="popover-control popover-control--info"
                 popovertarget="${uId}"
-                @mouseenter="${this.showPopover}" @mouseleave="${this.hidePopover}"
-                @focus="${this.showPopover}" @blur="${this.hidePopover}"
+                @mouseenter="${this.popoverShow}" @mouseleave="${this.popoverHide}"
+                @focus="${this.popoverShow}" @blur="${this.popoverHide}"
               >
                 <abbr title="info" >i</abbr>
               </a>
@@ -264,8 +269,8 @@ export class ModelViewer extends LitElement {
                 href="#${uId}"
                 class="popover-control popover-control--info"
                 popovertarget="${uId}"
-                @mouseenter="${this.showPopover}" @mouseleave="${this.hidePopover}"
-                @focus="${this.showPopover}" @blur="${this.hidePopover}"
+                @mouseenter="${this.popoverShow}" @mouseleave="${this.popoverHide}"
+                @focus="${this.popoverShow}" @blur="${this.popoverHide}"
               >
                 <abbr title="info" >i</abbr>
               </a>
@@ -277,9 +282,9 @@ export class ModelViewer extends LitElement {
           <li>
             ${!itemsItemTypeIsValue ?
               html`
-                <button type="button" class="button--object" @click="${() => { this.selectArrayItem(property, item); }}">
+                <bdo-button direction="right" @clicked="${() => { this.selectArrayItem(property, item); }}">
                   <span class="txt--property">${item.items.title}</span>
-                </button>
+                </bdo-button>
               ` :
               renderValue
             }
@@ -287,9 +292,9 @@ export class ModelViewer extends LitElement {
           <li>
             ${!itemsItemTypeIsValue ?
               html`
-                <button type="button" class="button--object" disabled>
+                <bdo-button direction="right" disabled>
                   <span class="txt--property">${item.items.title}</span>
-                </button>
+                </bdo-button>
               ` :
               renderValue
             }
@@ -310,7 +315,7 @@ export class ModelViewer extends LitElement {
 
       oneOf.push(html`
         <li>
-          <button type="button" class="button--object" @click="${() => { this.selectOneOf(item); }}">
+          <bdo-button direction="right" @clicked="${() => { this.selectOneOf(item); }}">
             <span class="button-label">
               <span class="txt--property">${item.title}</span>
               ${
@@ -320,15 +325,16 @@ export class ModelViewer extends LitElement {
                     href="#${uId}"
                     class="popover-control popover-control--info"
                     popovertarget="${uId}"
-                    @mouseenter="${this.showPopover}" @mouseleave="${this.hidePopover}"
-                    @focus="${this.showPopover}" @blur="${this.hidePopover}"
+                    @mouseenter="${this.popoverShow}" @mouseleave="${this.popoverHide}"
+                    @focus="${this.popoverShow}" @blur="${this.popoverHide}"
+                    @click="${(event: Event) => event.stopPropagation()}"
                   >
                     <abbr title="info" >i</abbr>
                   </a>
                 ` : null
               }
             </span>
-          </button>
+          </bdo-button>
           ${this.renderPopover(item.description, uId)}
         </li>
         `);
@@ -337,7 +343,7 @@ export class ModelViewer extends LitElement {
     return html`
       <div class="item item--one-of">
         <h2>
-          <span class="txt--property">${title || property}<span>
+          <span class="txt--property">${title || property}</span>
         </h2>
 
         <ul class="list--one-of">
@@ -349,7 +355,7 @@ export class ModelViewer extends LitElement {
 
   renderPopover(content: string, uId: string | number): TemplateResult | undefined {
     if (content) {
-      return html`<div id="${uId}" popover>${content.trim()}</div>`;
+      return html`<bdo-popover popover id="${uId}">${content.trim()}</bdo-popover>`;
     }
 
     return;
@@ -385,29 +391,27 @@ export class ModelViewer extends LitElement {
 
   }
 
-  showPopover(event: any) {
+  popoverShow(event: any) {
     const control = event.target;
-    const targetId = control.attributes.popovertarget.value;
+    const targetId = control?.attributes.popovertarget.value;
     const target = this.renderRoot.querySelector(`#${targetId}`);
 
     if (target) {
       this.positionPopover(control, target as HTMLElement);
       try {
-        // @ts-ignore
-        target.showPopover();
+        (target as any).showPopover();
       }
       catch {}
     }
   }
 
-  hidePopover(event: any) {
+  popoverHide(event: any): void {
     const targetId = event.target.attributes.popovertarget.value;
     const target = this.renderRoot.querySelector(`#${targetId}`);
 
     if (target) {
       try {
-        // @ts-ignore
-        target.hidePopover();
+        (target as any).hidePopover();
       }
       catch {}
     }
@@ -428,279 +432,6 @@ export class ModelViewer extends LitElement {
   }
 
   static override get styles() {
-    const styles =  css`
-        :host {
-          --item-line-color: var(--color-brand-base);
-          --button-hover-color: var(--color-brand-a10);
-
-          border: var(--line-base) solid var(--color-brand-a40);
-          padding: var(--space-md);
-          display: block;
-          border-radius: var(--radius-base);
-          font-size: var(--font-size-sm);
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-md);
-        }
-
-        :where(h1, h2, h3, h4, p, ul, ol, dl):first-child {
-          margin-block-start: 0;
-        }
-
-        :where(h1, h2, h3, h4, p, ul, ol, dl):last-child {
-          margin-block-end: 0;
-        }
-
-        h3 {
-          column-gap: var(--space-xs);
-          display: flex;
-          font-size: var(--font-size-sm);
-        }
-
-        ul, ol {
-          margin: 0;
-        }
-
-        dt {
-          color: rgba(0 0 0 / 50%);
-          font-weight: 600;
-        }
-
-        dd {
-          margin-inline-start: 0
-        }
-
-        dd + dt {
-          margin-block-start: 1em;
-        }
-
-        button {
-          background-color: transparent;
-          border: var(--line-base) solid var(--item-line-color);
-          border-radius: var(--radius-half);
-          color: var(--button-text-color);
-          min-height: var(--space-lg);
-          padding: var(--space-sm) var(--space-sm);
-          text-decoration: none;
-          transition: all var(--duration-base);
-        }
-
-        button[disabled] {
-          pointer-event: none;
-        }
-
-        :is(button:not([disabled])):is(:active, :hover, :focus-visible) {
-          background-color: var(--button-hover-color);
-          color: var(--button-text-color-active);
-        }
-
-        .icon--type {
-          margin-inline-start: auto;
-          font-size: var(--font-size-xs);
-          background-color: var(--main-surface);
-          border-radius: var(--radius-pill);
-          align-self: center;
-          padding: var(--space-xxs) var(--space-xs);
-        }
-
-        .icon--type em {
-          font-style: normal;
-          font-weight: 400;
-        }
-
-        .button--object {
-          align-items: center;
-          display: flex;
-          justify-content: space-between;
-          column-gap: var(--space-xs);
-          inline-size: 100%;
-        }
-
-        .button--object::after {
-          content: "";
-          display: inline-block;
-          border-color: currentColor;
-          border-width:var(--line-thin) var(--line-thin) 0 0;
-          border-style: solid;
-          height: var(--space-xs);
-          width: var(--space-xs);
-          position: relative;
-          top: calc(var(--space-xxs) / -2);
-          transform: rotate(45deg);
-          justify-self: end;
-          transition: transform var(--duration-base);
-          transform-origin: 30% 70%;
-          justify-self: flex-end;
-        }
-
-        .button-label {
-          display: flex;
-          column-gap: var(--space-xs);
-        }
-
-        .popover-control--info {
-          background-color: var(--color-white);
-          align-self: center;
-          border: var(--line-base) solid var(--button-background-base);
-          border-radius: var(--radius-circle);
-          block-size: var(--font-size-base);
-          font-size: var(--font-size-xs);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          aspect-ratio: 1;
-          text-decoration: none;
-        }
-
-        .popover-control--info abbr[title] {
-          border: 0;
-          line-height: 1em;
-          text-decoration: none;
-          font-weight: 600;
-        }
-
-        .txt--property {
-          font-weight: 600;
-        }
-
-        .txt--required {
-          color: var(--color-error);
-        }
-
-        .list--path {
-          display: flex;
-          gap: var(--space-xs);
-          padding-inline-start: 0;
-          list-style: none;
-          align-items: center;
-          flex-wrap: wrap
-        }
-
-        .list--path li {
-          display: flex;
-          column-gap: var(--space-xs);
-          align-items: center;
-        }
-
-        .list--path li:not(:last-child, .oneof)::after {
-          content: ' /';
-        }
-
-        .list--path li.oneof button::after {
-          content: ':';
-        }
-
-        .list--path li.oneof + .object button {
-          margin-inline-start: calc(var(--space-xxs) * -1);
-        }
-
-        .list--path button {
-          padding: var(--space-xs);
-        }
-
-        .list--path li > span {
-          padding-block: calc(var(--line-base) + var(--space-sm));
-        }
-
-        .list--one-of,
-        .list--array {
-          list-style: none;
-          padding-inline-start: 0;
-          display: flex;
-          flex-direction: column;
-          row-gap: var(--space-sm);
-        }
-
-        .list--one-of {
-
-          row-gap: var(--space-xxs);
-        }
-
-        .list--one-of li {
-          display: flex;
-          flex-direction: column;
-          position: relative;
-          row-gap: var(--space-xxs);
-        }
-
-        .list--one-of li:not(:last-child)::after {
-          content: 'OR';
-          font-size: var(--font-size-xs);
-          text-align: center;
-          display: block;
-          color: var(--color-black-a40);
-          font-weight: 600;
-        }
-
-        .list--array li {
-          position: relative;
-        }
-        
-        .list--array li::before,
-        .list--array li::after {
-          content: '';
-          position: absolute;
-          inset-inline-start: calc(var(--space-sm) * -1);
-          inset-block-start: calc(var(--space-sm) + var(--space-xxs));
-        }
-
-        .list--array li::before {
-          background-color: var(--item-line-color);
-          block-size: var(--line-thin);
-          inline-size: var(--space-sm);
-        }
-        
-        .list--array li::after {
-          aspect-ratio: 1;
-          background-color: var(--main-surface);
-          block-size: .625rem;
-          border-radius: var(--radius-circle);
-          border: var(--line-thin) solid var(--item-line-color);
-          transform: translateX(-.4375rem) translateY(-.25rem);
-        }
-
-        [popover] {
-          box-shadow: var(--drop-shadow-level2);
-          border: 0;
-          border-radius: var(--radius-base);
-          inset: unset;
-          margin-top: var(--space-xs);
-          padding: var(--space-sm);
-          position: absolute;
-          transition: border var(--duration-base);
-        }
-
-        [popover]::backdrop {
-          background-color: rgba(0 0 0 / 5%);
-        }
-
-        :is(button:not([disabled])):is(:active, :hover, :focus-visible) + [popover] {
-          border-color: var(--button-background-active)
-        }
-
-        .items {
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-md);
-        }
-
-        .item--value {
-          background-color: var(--color-black-a05);
-          border-radius: var(--radius-half);
-          padding: var(--space-sm);
-        }
-
-        .item--array {
-          border-radius: var(--radius-half);
-          border: var(--line-thin) solid var(--item-line-color);
-          padding: var(--space-sm);
-          padding-block-end: 0;
-          margin-block-end: calc(var(--space-xs) * -1);
-          mask-image: linear-gradient(to top, transparent var(--space-sm), black var(--space-xl));
-          -webkit-mask-image: linear-gradient(to top, transparent var(--space-sm), black var(--space-xl));
-        }
-    `;
-
-    return [resetStyles, styles];
+    return modelViewerCss;
   }
 }
