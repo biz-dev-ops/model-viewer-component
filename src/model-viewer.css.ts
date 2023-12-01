@@ -67,6 +67,7 @@ const modelViewerCss =  css`
       border: var(--line-base) solid var(--button-background-base);
       border-radius: var(--radius-circle);
       block-size: var(--font-size-base);
+      cursor: pointer
       font-size: var(--font-size-xs);
       display: flex;
       align-items: center;

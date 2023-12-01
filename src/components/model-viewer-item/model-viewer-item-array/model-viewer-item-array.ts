@@ -24,13 +24,9 @@ export class ModelViewerItemArray extends LitElement {
                     ${
                         this.item.description ?
                         html`
-                        <a
-                            href="#${poId}"
-                            class="popover-control popover-control--info"
-                            popovertarget="${poId}"
-                        >
-                            <abbr title="info" >i</abbr>
-                        </a>
+                            <button class="popover-control popover-control--info" popovertarget="${poId}">
+                                <abbr title="info" >i</abbr>
+                            </button>
                         ` : null
                     }
                 </h3>

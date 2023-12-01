@@ -23,21 +23,16 @@ export class ModelViewerItemOneOf extends LitElement {
                         ${
                             item.description ?
                             html`
-                            <a
-                                href="#${poId}"
-                                class="popover-control popover-control--info"
-                                popovertarget="${poId}"
-                                @click="${(event: Event) => event.stopPropagation()}"
-                            >
-                                <abbr title="info" >i</abbr>
-                            </a>
+                                <button class="popover-control popover-control--info" popovertarget="${poId}" @click="${(event: Event) => event.stopPropagation()}">
+                                    <abbr title="info" >i</abbr>
+                                </button>
                             ` : null
                         }
                         </span>
                     </bdo-button>
 
                     ${item.description ? html`
-                        <bdo-popover popover id="${poId}">${item.description.trim()}</bdo-popover>
+                        <bdo-popover popover show id="${poId}">${item.description.trim()}</bdo-popover>
                     ` : html``}
                 </li>
             `);

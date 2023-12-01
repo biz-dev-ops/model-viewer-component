@@ -23,10 +23,8 @@ export class ModelViewerItemValue extends LitElement {
                 <dd>${value}</dd>
               `);
             }
-          }
+        }
     
-        return properties.length ? html`<dl>${properties}</dl>` : '';
-
         return html`
             <div class="item item--value">
                 <h3>
@@ -37,13 +35,12 @@ export class ModelViewerItemValue extends LitElement {
                     ${
                         this.item.description ?
                         html`
-                            <a
-                            href="#${poId}"
-                            class="popover-control popover-control--info"
-                            popovertarget="${poId}"
+                            <button
+                                class="popover-control popover-control--info"
+                                popovertarget="${poId}"
                             >
-                            <abbr title="info" >i</abbr>
-                            </a>
+                                <abbr title="info" >i</abbr>
+                            </button>
                         ` : null
                     }
 
