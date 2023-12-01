@@ -13,8 +13,6 @@ export class ModelViewerItemOneOf extends LitElement {
         const oneOf = [];
 
         for (const item of this.items) {
-            const poId = 'popover-' + Math.floor(Math.random() * Date.now()).toString(16);
-
             oneOf.push(html`
                 <li>
                    <bdo-button direction="right" @clicked="${() => { this.handleItemSelection(item); }}">
@@ -23,17 +21,16 @@ export class ModelViewerItemOneOf extends LitElement {
                         ${
                             item.description ?
                             html`
-                                <button class="popover-control popover-control--info" popovertarget="${poId}" @click="${(event: Event) => event.stopPropagation()}">
-                                    <abbr title="info" >i</abbr>
-                                </button>
+                                <bdo-popover>
+                                    <button slot="toggle" class="popover-control popover-control--info">
+                                        <abbr title="info" >i</abbr>
+                                    </button>
+
+                                    ${item.description.trim()}
                             ` : null
                         }
                         </span>
                     </bdo-button>
-
-                    ${item.description ? html`
-                        <bdo-popover popover show id="${poId}">${item.description.trim()}</bdo-popover>
-                    ` : html``}
                 </li>
             `);
         }

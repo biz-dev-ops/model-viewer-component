@@ -12,7 +12,6 @@ export class ModelViewerItemValue extends LitElement {
     @property({ type: Boolean }) required!: boolean;
 
     override render() {
-        const poId = 'popover-' + Math.floor(Math.random() * Date.now()).toString(16);
         const properties: TemplateResult[] = [];
     
         for (const property in this.item) {
@@ -35,12 +34,13 @@ export class ModelViewerItemValue extends LitElement {
                     ${
                         this.item.description ?
                         html`
-                            <button
-                                class="popover-control popover-control--info"
-                                popovertarget="${poId}"
-                            >
-                                <abbr title="info" >i</abbr>
-                            </button>
+                            <bdo-popover>
+                                <button slot="toggle" class="popover-control popover-control--info">
+                                    <abbr title="info" >i</abbr>
+                                </button>
+
+                                ${this.item.description.trim()}
+                            </bdo-popover>
                         ` : null
                     }
 
@@ -51,10 +51,6 @@ export class ModelViewerItemValue extends LitElement {
 
                 ${properties}
             </div>
-
-            ${this.item.description ? html`
-                <bdo-popover popover id="${poId}">${this.item.description.trim()}</bdo-popover>
-            ` : html``}
         `;
     }
 

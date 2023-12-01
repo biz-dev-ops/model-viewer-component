@@ -24,9 +24,13 @@ export class ModelViewerItemArray extends LitElement {
                     ${
                         this.item.description ?
                         html`
-                            <button class="popover-control popover-control--info" popovertarget="${poId}">
-                                <abbr title="info" >i</abbr>
-                            </button>
+                            <bdo-popover>
+                                <button slot="toggle" class="popover-control popover-control--info" popovertarget="${poId}">
+                                    <abbr title="info" >i</abbr>
+                                </button>
+
+                                ${this.item.description.trim()}
+                            </bdo-popover>
                         ` : null
                     }
                 </h3>
@@ -40,10 +44,6 @@ export class ModelViewerItemArray extends LitElement {
                         </slot>
                     </li>
                 </ul>
-
-                ${this.item.description ? html`
-                    <bdo-popover popover id="${poId}">${this.item.description.trim()}</bdo-popover>
-                ` : html``}
             </div>
         `;
     }

@@ -1,62 +1,86 @@
 import { LitElement, html } from 'lit-element';
-import { customElement, property } from 'lit/decorators.js';
+import { customElement, property, query, queryAssignedElements, state } from 'lit/decorators.js';
 import popoverCss from './popover.css';
 
 @customElement('bdo-popover')
 export class BdoPopover extends LitElement {
     @property({ type: String }) override id!: string;
+    @property({ type: String }) uid: string = Math.floor(Math.random() * Date.now()).toString(16);
+
+    @queryAssignedElements({slot: 'toggle', selector: 'button', flatten: true})
+    _toggleElements!: Array<HTMLElement>;
+
+    @query('[popover]')
+    _popoverElement!: HTMLElement;
+
+    @state()
+    _toggleButton!: HTMLElement;
+
+    supportsPopover(): boolean {
+        return HTMLElement.prototype.hasOwnProperty("popover");
+    }
+
+    override firstUpdated(): void {
+        if (this.supportsPopover()) {
+            (this._popoverElement as any).popover = "auto";
+            this._toggleElements.forEach((element) => {
+                (element as any).popoverTarget = this._popoverElement.id;
+                (element as any).popoverTargetAction = "toggle";
+                element.setAttribute('aria-haspopup', 'true');
+                element.setAttribute('aria-expanded', 'false');
+            });
+        }
+
+        this._toggleElements.forEach((element) => {
+            element.addEventListener('click', (event) => {
+                event.stopPropagation();
+
+                this._toggleButton = element;
+                if (element.getAttribute('aria-expanded') === 'true') {
+                    element.setAttribute('aria-expanded', 'false');
+
+                    if (this.supportsPopover()) {
+                        (this._popoverElement as any).hidePopover();
+                    } else {
+                        this._popoverElement.style.display = 'none';
+                    }
+                } else {
+                    element.setAttribute('aria-expanded', 'true');
+
+                    if (this.supportsPopover()) {
+                        (this._popoverElement as any).showPopover();
+                    } else {
+                        this._popoverElement.style.display = 'block';
+                        this._popoverElement.style.position = 'fixed';
+                        this._popoverElement.style.zIndex = '999';
+                    }
+                    this.position();
+                }
+            });
+        });
+    }
 
     override render() {
-        return html`<slot></slot>`;
+        return html`
+            <slot name="toggle"></slot>
+            <div popover id="${this.id || this.uid}">
+                <slot></slot>
+            </div>
+        `;
     }
 
-    constructor() {
-        super();
-        this.addEventListener('toggle', this.toggle);
-      }
-
-    toggle(event: Event) {
-        console.log('toggle', event);
+    position = () => {
+        const buttonPosition = this._toggleButton.getBoundingClientRect();
+        const parent = this._toggleButton.closest('.button--object, .item');
+        const parentPosition = parent?.getBoundingClientRect();
+        const scrollTop =  document.documentElement.scrollTop || document.body.scrollTop;
+    
+        if (parentPosition) {
+            this._popoverElement.style.left = `${parentPosition.left}px`;
+            this._popoverElement.style.top = `${buttonPosition.bottom + scrollTop}px`;
+            this._popoverElement.style.width = `${parentPosition.width}px`;
+        }
     }
-
-    // position = (control: HTMLElement, target: HTMLElement) => {
-    //     const buttonPosition = control.getBoundingClientRect();
-    //     const parent = control.closest('.button--object, .item');
-    //     const parentPosition = parent?.getBoundingClientRect();
-    //     const scrollTop =  document.documentElement.scrollTop || document.body.scrollTop;
-    
-    //     if (parentPosition) {
-    //         target.style.left = `${parentPosition.left}px`;
-    //         target.style.top = `${buttonPosition.bottom + scrollTop}px`;
-    //         target.style.width = `${parentPosition.width}px`;
-    //     }
-    // }
-    
-    // const popoverShow = (event: any) => {
-    //     const control = event.target;
-    //     const targetId = control?.attributes.popovertarget.value;
-    //     const target = this.renderRoot.querySelector(`#${targetId}`);
-    
-    //     if (target) {
-    //         this.positionPopover(control, target as HTMLElement);
-    //         try {
-    //         (target as any).showPopover();
-    //         }
-    //         catch {}
-    //     }
-    // }
-    
-    // const popoverHide = (event: any) => {
-    //     const targetId = event.target.attributes.popovertarget.value;
-    //     const target = this.renderRoot.querySelector(`#${targetId}`);
-    
-    //     if (target) {
-    //         try {
-    //         (target as any).hidePopover();
-    //         }
-    //         catch {}
-    //     }
-    // }
     
     static override get styles() {
         return popoverCss;
