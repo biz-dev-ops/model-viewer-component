@@ -1,4 +1,4 @@
-import { html, LitElement, TemplateResult } from 'lit';
+import { css, html, LitElement, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { ifDefined } from 'lit/directives/if-defined.js';
 
@@ -6,6 +6,11 @@ import { ModelItem, PathItem } from './model-viewer.types';
 import modelViewerCss from './model-viewer.css';
 import "./components/ui/button/button";
 import "./components/ui/popover/popover";
+import "./components/model-viewer-item/model-viewer-item-boolean/model-viewer-item-boolean";
+import "./components/model-viewer-item/model-viewer-item-value/model-viewer-item-value";
+import "./components/model-viewer-item/model-viewer-item-oneof/model-viewer-item-oneof";
+import "./components/model-viewer-item/model-viewer-item-object/model-viewer-item-object";
+import "./components/model-viewer-item/model-viewer-item-array/model-viewer-item-array";
 
 @customElement('model-viewer')
 export class ModelViewer extends LitElement {
@@ -20,7 +25,6 @@ export class ModelViewer extends LitElement {
 
   @state()
   path: PathItem[] = [];
-  uid: number = 999;
 
   override render() {
     if(this.path.length === 0)
@@ -91,11 +95,6 @@ export class ModelViewer extends LitElement {
     return item.required?.includes(property);
   }
 
-  getUId(prefix: string): string | number {
-    this.uid = this.uid + 1;
-    return prefix ? `${prefix}-${this.uid}` : this.uid;
-  }
-
   renderPathItem(path: PathItem, index: number) {
     const item = html`<span class="txt--property">${path.title}</span>`;
     
@@ -117,20 +116,13 @@ export class ModelViewer extends LitElement {
       </li>
     `
   }
-
+  
   renderItem(property: string, title: string | undefined, item: ModelItem, required = false, root = false) {
     const type = this.getItemType(item);
     switch(type) {
-      case 'object':
-        return this.renderObject(property, title, item, required, root);
-      
       case 'string':
-        return this.renderValue(property, title, item, required);
-      
-      case 'number':
-        return this.renderValue(property, title, item, required);
-      
-      case 'integer':
+        case 'number':
+          case 'integer':
         return this.renderValue(property, title, item, required);
       
       case 'boolean':
@@ -143,8 +135,12 @@ export class ModelViewer extends LitElement {
         if (root) {
           return this.renderOneOf(property, title, item.oneOf);
         } else {
-          return this.renderObject(property, title, item, required, root);
+          break;
         }
+
+      // Object is default
+      default:
+        return this.renderObject(property, title, item, required, root);
     }
 
     return;
@@ -160,261 +156,88 @@ export class ModelViewer extends LitElement {
       `);
     }
 
-    return root ? 
-      html`
-        <div class="item item--object">
-          <h2>
-            <span class="txt--property">
-              ${title || property}
-              ${required ? html`<span class="txt--required">*</span>`: ``}
-            <span>
-          </h2>
-          
-          ${
-            item.description ?
-            html`<p>${item.description}</p>` : null
-          }
-          
-          <div class="items">
-            ${properties}
-          </div>
-        </div>
-      ` :
-      html`
-        <div class="item item--object">
-          <bdo-button type="button" direction="right" @clicked="${() => { this.selectObject(property, item); }}">
-            <span class="txt--property">${title || property} ${required ? html`<span class="txt--required">*</span>`: ``}</span>
-          </bdo-button>
-        </div>
-      `;
+    return html`
+      <model-viewer-item-object
+        property="${property}"
+        title="${title as string}"
+        .item="${item}"
+        .required="${required}"
+        .root="${root}"
+        @itemSelected=${(event: CustomEvent) => this.setPath(event.detail.property, event.detail.item)}
+      >
+          ${html`${properties}`}
+      </model-viewer-item-object>
+    `
   }
 
   renderValue(property: string, title: string | undefined, item: ModelItem, required: boolean): TemplateResult {
-    const properties = [];
-    const uId = this.getUId('popover');
-    for (const property in item) {
-      if (property !== 'description' && property !== 'title' && property !== 'type' && property !== 'format') {
-        const value = Array.isArray(item[property]) ? item[property].join(", ") : item[property];
-        properties.push(html`
-          <dt>${property}</dt>
-          <dd>${value}</dd>
-        `);
-      }
-    }
-
     return html`
-      <div class="item item--value">
-        <h3>
-          <span class="txt--property">
-            ${title || property}
-            ${required ? html`<span class="txt--required">*</span>`: ``}
-          </span>
-          ${
-            item.description ?
-            html`
-              <a
-                href="#${uId}"
-                class="popover-control popover-control--info"
-                popovertarget="${uId}"
-                @mouseenter="${this.popoverShow}" @mouseleave="${this.popoverHide}"
-                @focus="${this.popoverShow}" @blur="${this.popoverHide}"
-              >
-                <abbr title="info" >i</abbr>
-              </a>
-            ` : null
-          }
-
-          <span class="icon--type">
-            ${item.type}${item.format ? html`: <em>${item.format}</em>` : ''}
-            </span>
-        </h3>
-        ${
-          properties.length ?
-          html`<dl>${properties}</dl>` :
-          ''
-        }
-      </div>
-
-      ${this.renderPopover(item.description, uId)}
-    `
+      <model-viewer-item-value
+        property="${property}"
+        title="${title as string}"
+        .item="${item}"
+        .required="${required}"
+      ></model-viewer-item-value>
+    `;
   }
 
   renderBoolean(property: string, title: string | undefined, item: ModelItem): TemplateResult {
     return html`
-      <details>
-        <summary>${title || property } / type: ${item.type}</summary>
-        <p>${item.description}</p>
-        <pre>${JSON.stringify(item, null, 2)}</pre>
-      </details>
+      <model-viewer-item-boolean
+        property="${property}"
+        title="${title as string}"
+        .item="${item}"
+      >
+      </model-viewer-item-boolean>
     `;
   }
 
   renderArray(property: string, title: string | undefined, item: ModelItem, required: boolean): TemplateResult {
-    const uId = this.getUId('popover');
     const itemsItemType = this.getItemType(item.items);
     const itemsItemProperty = item.items.title || item.items.type;
-    const itemsItemTypeIsValue = itemsItemType === 'string' || itemsItemType === 'number' || itemsItemType === 'integer';
-    const renderValue = this.renderValue(item.items.type, item.items.title, item.items, this.getRequired(item.items, itemsItemProperty))
+    let itemsItemTypeIsValue = itemsItemType === 'string' || itemsItemType === 'number' || itemsItemType === 'integer';
 
     return html`
-      <div class="item item--array">
-        <h3>
-          <span class="txt--property">
-            ${title || property} ${required ? html`<span class="txt--required">*</span>`: ``}
-          </span>
-          ${
-            item.description ?
-            html`
-              <a
-                href="#${uId}"
-                class="popover-control popover-control--info"
-                popovertarget="${uId}"
-                @mouseenter="${this.popoverShow}" @mouseleave="${this.popoverHide}"
-                @focus="${this.popoverShow}" @blur="${this.popoverHide}"
-              >
-                <abbr title="info" >i</abbr>
-              </a>
-            ` : null
-          }
-        </h3>
-        
-        <ul class="list--array">
-          <li>
-            ${!itemsItemTypeIsValue ?
-              html`
-                <bdo-button direction="right" @clicked="${() => { this.selectArrayItem(property, item); }}">
-                  <span class="txt--property">${item.items.title}</span>
-                </bdo-button>
-              ` :
-              renderValue
-            }
-          </li>
-          <li>
-            ${!itemsItemTypeIsValue ?
-              html`
-                <bdo-button direction="right" disabled>
-                  <span class="txt--property">${item.items.title}</span>
-                </bdo-button>
-              ` :
-              renderValue
-            }
-            
-          </li>
-        </ul>
-
-        ${this.renderPopover(item.description, uId)}
-    </div>
-    `;
+      <model-viewer-item-array
+        property="${property}"
+        title="${title as string}"
+        .item="${item}"
+        .required="${required}"
+        @itemSelected=${(event: CustomEvent) => this.setArrayAndItemPath(event.detail.property, event.detail.item)}
+      >
+        ${
+          itemsItemTypeIsValue ?
+          html`
+            <model-viewer-item-value
+              slot="value"
+              property="${item.items.type}"
+              title="${item.items.title as string}"
+              .item="${item.items}"
+              .required="${this.getRequired(item.items, itemsItemProperty)}"
+            ></model-viewer-item-value>
+          ` :
+          html``
+        }
+      </model-viewer-item-array>`;
   }
 
   renderOneOf(property: string, title: string | undefined, items: ModelItem[]): TemplateResult {
-    const oneOf = [];
-
-    for (const item of items) {
-      const uId = this.getUId('popover');
-
-      oneOf.push(html`
-        <li>
-          <bdo-button direction="right" @clicked="${() => { this.selectOneOf(item); }}">
-            <span class="button-label">
-              <span class="txt--property">${item.title}</span>
-              ${
-                item.description ?
-                html`
-                  <a
-                    href="#${uId}"
-                    class="popover-control popover-control--info"
-                    popovertarget="${uId}"
-                    @mouseenter="${this.popoverShow}" @mouseleave="${this.popoverHide}"
-                    @focus="${this.popoverShow}" @blur="${this.popoverHide}"
-                    @click="${(event: Event) => event.stopPropagation()}"
-                  >
-                    <abbr title="info" >i</abbr>
-                  </a>
-                ` : null
-              }
-            </span>
-          </bdo-button>
-          ${this.renderPopover(item.description, uId)}
-        </li>
-        `);
-    }
-
     return html`
-      <div class="item item--one-of">
-        <h2>
-          <span class="txt--property">${title || property}</span>
-        </h2>
-
-        <ul class="list--one-of">
-          ${oneOf}
-        </ul>
-      </div>
+      <model-viewer-item-one-of
+        property="${property}"
+        title="${title as string}"
+        .items="${items}"
+        @itemSelected=${(event: CustomEvent) => this.setPath('', event.detail.item)}
+      ></model-viewer-item-one-of>
     `;
   }
 
-  renderPopover(content: string, uId: string | number): TemplateResult | undefined {
-    if (content) {
-      return html`<bdo-popover popover id="${uId}">${content.trim()}</bdo-popover>`;
-    }
-
-    return;
-  }
-
-  selectOneOf(item: ModelItem) {
-    this.setPath('', item);
-  }
-
-  selectObject(property: string, item: ModelItem) {
-    this.setPath(property, item);
-  }
-
-  selectArrayItem(property: string, item: ModelItem) {
+  setArrayAndItemPath(property: string, item: ModelItem) {
     // Add array path
     this.setPath(property, item);
     
     // Add item path
     this.setPath(property, item.items);
-  }
-
-  positionPopover(control: HTMLElement, target: HTMLElement) {
-    const buttonPosition = control.getBoundingClientRect();
-    const parent = control.closest('.button--object, .item');
-    const parentPosition = parent?.getBoundingClientRect();
-    const scrollTop =  document.documentElement.scrollTop || document.body.scrollTop;
-
-    if (parentPosition) {
-      target.style.left = `${parentPosition.left}px`;
-      target.style.top = `${buttonPosition.bottom + scrollTop}px`;
-      target.style.width = `${parentPosition.width}px`;
-    }
-
-  }
-
-  popoverShow(event: any) {
-    const control = event.target;
-    const targetId = control?.attributes.popovertarget.value;
-    const target = this.renderRoot.querySelector(`#${targetId}`);
-
-    if (target) {
-      this.positionPopover(control, target as HTMLElement);
-      try {
-        (target as any).showPopover();
-      }
-      catch {}
-    }
-  }
-
-  popoverHide(event: any): void {
-    const targetId = event.target.attributes.popovertarget.value;
-    const target = this.renderRoot.querySelector(`#${targetId}`);
-
-    if (target) {
-      try {
-        (target as any).hidePopover();
-      }
-      catch {}
-    }
   }
 
   setPath(property: string, item: ModelItem, name: string | undefined = undefined) {
@@ -432,6 +255,19 @@ export class ModelViewer extends LitElement {
   }
 
   static override get styles() {
-    return modelViewerCss;
+    const hostCSS = css`
+      :host {
+          border: var(--line-base) solid var(--color-brand-a40);
+          padding: var(--space-md);
+          display: block;
+          border-radius: var(--radius-base);
+          font-size: var(--font-size-sm);
+          display: flex;
+          flex-direction: column;
+          gap: var(--space-md);
+          }
+  `;
+  
+    return [hostCSS, modelViewerCss];
   }
 }

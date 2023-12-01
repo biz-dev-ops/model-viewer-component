@@ -8,15 +8,6 @@ const modelViewerCss =  css`
       --button-hover-color: var(--color-brand-a10);
       --button-font-size: var(--font-size-sm);
       --button-inline-size: 100%;
-
-      border: var(--line-base) solid var(--color-brand-a40);
-      padding: var(--space-md);
-      display: block;
-      border-radius: var(--radius-base);
-      font-size: var(--font-size-sm);
-      display: flex;
-      flex-direction: column;
-      gap: var(--space-md);
     }
 
     :where(h1, h2, h3, h4, p, ul, ol, dl):first-child {
@@ -192,6 +183,10 @@ const modelViewerCss =  css`
       border-radius: var(--radius-circle);
       border: var(--line-thin) solid var(--item-line-color);
       transform: translateX(-.4375rem) translateY(-.25rem);
+    }
+
+    .list--array li:not(:first-child) {
+      pointer-events: none;
     }
 
     :is(button:not([disabled])):is(:active, :hover, :focus-visible) + [popover] {
