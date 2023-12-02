@@ -52,3 +52,7 @@ export interface ItemSelected {
   property: string;
   item: ModelItem;
 }
+
+export interface PathChanged {
+  index: number
+}
