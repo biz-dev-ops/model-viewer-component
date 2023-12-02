@@ -1,13 +1,10 @@
-import { html, LitElement, TemplateResult } from "lit";
+import { html, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { ItemSelected, ModelItem, ModelItemDecorator } from "../../../model-viewer.types";
-import modelViewerCss from "../../../model-viewer.css";
+import { ItemSelected, ModelItemDecorator } from "../../../model-viewer.types";
+import { ModelViewerItem } from "..";
 
 @customElement('model-viewer-item-boolean')
-export class ModelViewerItemBoolean extends LitElement {
-  @property({ type: Object }) item!: ModelItem;
-  @property({ type: String }) property!: string;
-  @property({ type: String }) override title!: string;
+export class ModelViewerItemBoolean extends ModelViewerItem {
 
   override render() {
     return html`
@@ -17,10 +14,6 @@ export class ModelViewerItemBoolean extends LitElement {
                 <pre>${JSON.stringify(this.item, null, 2)}</pre>
             </details>
       `;
-  }
-
-  static override get styles() {
-    return modelViewerCss;
   }
 
   public static build(decorated: ModelItemDecorator, _itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void) : TemplateResult {

@@ -1,19 +1,14 @@
-import { customElement, property } from "lit/decorators.js";
-import { LitElement, html } from "lit";
-import modelViewerCss from "../../../model-viewer.css";
-import { ItemSelected, ModelItem, ModelItemDecorator } from "../../../model-viewer.types";
+import { customElement } from "lit/decorators.js";
+import { html } from "lit";
+import { ItemSelected, ModelItemDecorator } from "../../../model-viewer.types";
 
 import "../../ui/button";
 import "../../ui/popover";
 import { ModelItemBuilder } from "../../../modules/model-item-builder";
+import { ModelViewerItem } from "..";
 
-// array
 @customElement('model-viewer-item-array')
-export class ModelViewerItemArray extends LitElement {
-    @property({ type: Object }) item!: ModelItem;
-    @property({ type: String }) property!: string;
-    @property({ type: String }) override title!: string;
-    @property({ type: Boolean }) required!: boolean;
+export class ModelViewerItemArray extends ModelViewerItem {
     
     override render() {
         const poId = 'popover-' + Math.floor(Math.random() * Date.now()).toString(16);
@@ -41,7 +36,7 @@ export class ModelViewerItemArray extends LitElement {
                 <ul class="list--array">
                     <li>
                         <slot name="value">
-                            <bdo-button direction="right" @clicked="${() => { this.onClicked(this.property, this.item); }}">
+                            <bdo-button direction="right" @clicked=${this.onClicked}>
                                 <span class="txt--property">${this.item.items.title}</span>
                             </bdo-button>
                         </slot>
@@ -66,13 +61,9 @@ export class ModelViewerItemArray extends LitElement {
         }
     }
 
-    onClicked(property: string, item: ModelItem) {
-        this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property, item } }));
-        this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property, item: item.items } }));
-    }
-    
-    static override get styles() {
-        return modelViewerCss;
+    onClicked() {
+        this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property: this.property, item: this.item } }));
+        this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property: this.property, item: this.item.items } }));
     }
 
     static build(decorated: ModelItemDecorator, itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void, collapse: boolean): import("lit-html").TemplateResult {

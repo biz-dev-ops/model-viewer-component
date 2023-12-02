@@ -1,15 +1,13 @@
 import { customElement, property } from "lit/decorators.js";
-import { LitElement, TemplateResult, html } from "lit";
-import modelViewerCss from "../../../model-viewer.css";
+import { TemplateResult, html } from "lit";
 import { ItemSelected, ModelItem, ModelItemDecorator } from "../../../model-viewer.types";
 
 import "../../ui/button";
 import "../../ui/popover";
+import { ModelViewerItem } from "..";
 
 @customElement('model-viewer-item-one-of')
-export class ModelViewerItemOneOf extends LitElement {
-    @property({ type: String }) property!: string;
-    @property({ type: String }) override title!: string;
+export class ModelViewerItemOneOf extends ModelViewerItem {
     @property({ type: Array }) items!: ModelItem[];
 
     override render() {
@@ -23,7 +21,7 @@ export class ModelViewerItemOneOf extends LitElement {
                     ${this.items.map(item =>
                         html`
                                 <li>
-                                   <bdo-button direction="right" @clicked="${() => { this.handleItemSelection(item); }}">
+                                   <bdo-button direction="right" @clicked="${() => { this.onClicked(item); }}">
                                         <span class="button-label">
                                         <span class="txt--property">${item.title}</span>
                                         ${item.description ?
@@ -46,13 +44,8 @@ export class ModelViewerItemOneOf extends LitElement {
         `;
     }
 
-    handleItemSelection(item: ModelItem) {
-        const itemSelected = new CustomEvent<ItemSelected>('itemSelected', { detail: { property: this.property, item } });
-        this.dispatchEvent(itemSelected);
-    }
-
-    static override get styles() {
-        return modelViewerCss;
+    onClicked(item: ModelItem) {
+        this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property: this.property, item } }));
     }
 
     static build(decorated: ModelItemDecorator, itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void): TemplateResult {

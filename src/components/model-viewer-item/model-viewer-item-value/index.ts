@@ -1,16 +1,12 @@
-import { html, LitElement, TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
-import { ItemSelected, ModelItem, ModelItemDecorator } from "../../../model-viewer.types";
-import modelViewerCss from "../../../model-viewer.css";
+import { html, TemplateResult } from "lit";
+import { customElement } from "lit/decorators.js";
+import { ItemSelected, ModelItemDecorator } from "../../../model-viewer.types";
 
 import "../../ui/popover";
+import { ModelViewerItem } from "..";
 
 @customElement('model-viewer-item-value')
-export class ModelViewerItemValue extends LitElement {
-    @property({ type: Object }) item!: ModelItem;
-    @property({ type: String }) property!: string;
-    @property({ type: String }) override title!: string;
-    @property({ type: Boolean }) required!: boolean;
+export class ModelViewerItemValue extends ModelViewerItem {
 
     override render() {
         const properties: TemplateResult[] = [];
@@ -30,7 +26,7 @@ export class ModelViewerItemValue extends LitElement {
                 <h3>
                     <span class="txt--property">
                         ${this.title}
-                        ${this.required ? html`<span class="txt--required">*</span>`: ``}
+                        ${this.required ? html`<span class="txt--required">*</span>` : ``}
                     </span>
                     ${
                         this.item.description ?
@@ -53,10 +49,6 @@ export class ModelViewerItemValue extends LitElement {
                 ${properties}
             </div>
         `;
-    }
-
-    static override get styles() {
-        return modelViewerCss;
     }
 
     public static build(decorated: ModelItemDecorator, _itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void) : TemplateResult {
