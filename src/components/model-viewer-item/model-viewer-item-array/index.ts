@@ -66,7 +66,7 @@ export class ModelViewerItemArray extends ModelViewerItem {
         this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property: this.property, item: this.item.items } }));
     }
 
-    static build(decorated: ModelItemDecorator, itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void, collapse: boolean): import("lit-html").TemplateResult {
+    static build(decorated: ModelItemDecorator, itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void, root: boolean): import("lit-html").TemplateResult {
         if(decorated.item.type != "array" && !decorated.item.items)
             return html``;
 
@@ -78,7 +78,7 @@ export class ModelViewerItemArray extends ModelViewerItem {
             .required=${decorated.required}
             @itemSelected=${itemSelectedDelegate}
             >
-                ${ModelItemBuilder.build(new ModelItemDecorator(decorated.item.items), itemSelectedDelegate, collapse)}
+                ${ModelItemBuilder.build(new ModelItemDecorator(decorated.item.items), itemSelectedDelegate, root)}
             </model-viewer-item-array>
         `;
     }
