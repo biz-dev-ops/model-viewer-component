@@ -1,6 +1,6 @@
 import { LitElement, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { ModelItemDecorator } from "../../model-viewer.types";
+import { ModelItemDecorator, PathChanged } from "../../model-viewer.types";
 import { ifDefined } from "lit/directives/if-defined.js";
 import modelViewerCss from '../../model-viewer.css';
 
@@ -41,7 +41,7 @@ export class ModelViewerPath extends LitElement {
     }
 
     private onClick(index: number) {
-        this.dispatchEvent(new CustomEvent<any>('pathChanged', { detail: { index } }));
+        this.dispatchEvent(new CustomEvent<PathChanged>('pathChanged', { detail: { index } }));
     }
 
     static override get styles() {

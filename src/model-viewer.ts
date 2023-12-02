@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
-import { ItemSelected, ModelItem, ModelItemDecorator } from './model-viewer.types';
+import { ItemSelected, ModelItem, ModelItemDecorator, PathChanged } from './model-viewer.types';
 import { ModelItemBuilder } from './modules/model-item-builder';
 import modelViewerCss from './model-viewer.css';
 
@@ -68,7 +68,7 @@ export class ModelViewer extends LitElement {
     this.setPath(event.detail.property, event.detail.item)
   }
 
-  onPathChanged(event: CustomEvent<any>) {
+  onPathChanged(event: CustomEvent<PathChanged>) {
     this.path = this.path.slice(0, event.detail.index + 1);
   }
 

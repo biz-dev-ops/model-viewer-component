@@ -14,31 +14,28 @@ export class ModelViewerItemOneOf extends ModelViewerItem {
         return html`
             <div class="item item--one-of">
                 <h2>
-                <span class="txt--property">${this.title || property}</span>
+                    <span class="txt--property">${this.title || property}</span>
                 </h2>
 
                 <ul class="list--one-of">
-                    ${this.items.map(item =>
-                        html`
-                                <li>
-                                   <bdo-button direction="right" @clicked="${() => { this.onClicked(item); }}">
-                                        <span class="button-label">
-                                        <span class="txt--property">${item.title}</span>
-                                        ${item.description ?
-                                            html`
-                                                <bdo-popover>
-                                                    <button slot="toggle" class="popover-control popover-control--info">
-                                                        <abbr title="info" >i</abbr>
-                                                    </button>
-                
-                                                    ${item.description.trim()}
-                                                </bdo-popover>
-                                            ` : null
-                                        }
-                                        </span>
-                                    </bdo-button>
-                                </li>
-                `   )}
+                    ${this.items.map(item => html`
+                            <li>
+                                <bdo-button direction="right" @clicked="${() => { this.onClicked(item); }}">
+                                    <span class="button-label">
+                                    <span class="txt--property">${item.title}</span>
+                                    ${item.description ? html`
+                                            <bdo-popover>
+                                                <button slot="toggle" class="popover-control popover-control--info">
+                                                    <abbr title="info" >i</abbr>
+                                                </button>
+            
+                                                ${item.description.trim()}
+                                            </bdo-popover>
+                                        ` : null}
+                                    </span>
+                                </bdo-button>
+                            </li>
+                        `)}
                 </ul>
             </div>
         `;
@@ -49,9 +46,9 @@ export class ModelViewerItemOneOf extends ModelViewerItem {
     }
 
     static build(decorated: ModelItemDecorator, itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void): TemplateResult {
-        if(!decorated.item.oneOf)
+        if (!decorated.item.oneOf)
             return html``;
-        
+
         return html`
             <model-viewer-item-one-of
                 property=${decorated.property}
