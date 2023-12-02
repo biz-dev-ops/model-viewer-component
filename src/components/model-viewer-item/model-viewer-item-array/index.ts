@@ -1,8 +1,11 @@
 import { customElement, property } from "lit/decorators.js";
 import { LitElement, html } from "lit";
 import modelViewerCss from "../../../model-viewer.css";
-import { ModelItem } from "../../../model-viewer.types";
-import "../../ui/button/button";
+import { ItemSelected, ModelItem, ModelItemDecorator } from "../../../model-viewer.types";
+
+import "../../ui/button";
+import "../../ui/popover";
+import { ModelItemBuilder } from "../../../modules/model-item-builder";
 
 // array
 @customElement('model-viewer-item-array')
@@ -19,7 +22,7 @@ export class ModelViewerItemArray extends LitElement {
             <div class="item item--array">
                 <h3>
                     <span class="txt--property">
-                        ${this.title || property} ${this.required ? html`<span class="txt--required">*</span>`: ``}
+                        ${this.title} ${this.required ? html`<span class="txt--required">*</span>`: ``}
                     </span>
                     ${
                         this.item.description ?
@@ -38,7 +41,7 @@ export class ModelViewerItemArray extends LitElement {
                 <ul class="list--array">
                     <li>
                         <slot name="value">
-                            <bdo-button direction="right" @clicked="${() => { this.handleItemSelection(this.property, this.item); }}">
+                            <bdo-button direction="right" @clicked="${() => { this.onClicked(this.property, this.item); }}">
                                 <span class="txt--property">${this.item.items.title}</span>
                             </bdo-button>
                         </slot>
@@ -63,31 +66,29 @@ export class ModelViewerItemArray extends LitElement {
         }
     }
 
-    getItemType(item: ModelItem) {
-        if(item.type == 'object' || item.properties) {
-          return 'object';
-        } else if(item.type == 'string') {
-          return 'string';
-        } else if(item.type == 'number') {
-          return 'number';
-        } else if(item.type == 'integer') {
-          return 'integer';
-        } else if(item.type == 'boolean') {
-          return 'boolean';
-        } else if(item.type == 'array' || item.items) {
-          return 'array';
-        } else if(item.oneOf) {
-          return 'oneOf';
-        }
-        return;
-    }
-
-    handleItemSelection(property: string, item: ModelItem) {
-        const itemSelected = new CustomEvent('itemSelected', { detail: { property, item } });
-        this.dispatchEvent(itemSelected);
+    onClicked(property: string, item: ModelItem) {
+        this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property, item } }));
+        this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property, item: item.items } }));
     }
     
     static override get styles() {
         return modelViewerCss;
+    }
+
+    static build(decorated: ModelItemDecorator, itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void, collapse: boolean): import("lit-html").TemplateResult {
+        if(decorated.item.type != "array" && !decorated.item.items)
+            return html``;
+
+        return html`
+            <model-viewer-item-array
+            property=${decorated.property}
+            title=${decorated.title}
+            .item=${decorated.item}
+            .required=${decorated.required}
+            @itemSelected=${itemSelectedDelegate}
+            >
+                ${ModelItemBuilder.build(new ModelItemDecorator(decorated.item.items), itemSelectedDelegate, collapse)}
+            </model-viewer-item-array>
+        `;
     }
 }

@@ -1,8 +1,9 @@
 import { html, LitElement, TemplateResult } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import { ModelItem } from "../../../model-viewer.types";
-import "../../ui/popover/popover";
+import { ItemSelected, ModelItem, ModelItemDecorator } from "../../../model-viewer.types";
 import modelViewerCss from "../../../model-viewer.css";
+
+import "../../ui/popover";
 
 @customElement('model-viewer-item-value')
 export class ModelViewerItemValue extends LitElement {
@@ -28,7 +29,7 @@ export class ModelViewerItemValue extends LitElement {
             <div class="item item--value">
                 <h3>
                     <span class="txt--property">
-                        ${this.title || this.property}
+                        ${this.title}
                         ${this.required ? html`<span class="txt--required">*</span>`: ``}
                     </span>
                     ${
@@ -56,5 +57,19 @@ export class ModelViewerItemValue extends LitElement {
 
     static override get styles() {
         return modelViewerCss;
+    }
+
+    public static build(decorated: ModelItemDecorator, _itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void) : TemplateResult {
+        if(decorated.item.type != 'string' && decorated.item.type != 'number' && decorated.item.type != 'integer')
+            return html``;
+            
+        return html`
+            <model-viewer-item-value
+              property=${decorated.property}
+              title=${decorated.title}
+              .item=${decorated.item}
+              .required=${decorated.required}
+            ></model-viewer-item-value>
+          `;
     }
 }
