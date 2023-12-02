@@ -14,7 +14,7 @@ export class ModelViewerItemOneOf extends ModelViewerItem {
         return html`
             <div class="item item--one-of">
                 <h2>
-                    <span class="txt--property">${this.title || property}</span>
+                    <span class="txt--property">${this.title}</span>
                 </h2>
 
                 <ul class="list--one-of">
@@ -54,6 +54,7 @@ export class ModelViewerItemOneOf extends ModelViewerItem {
                 property=${decorated.property}
                 title=${decorated.title}
                 .items=${decorated.item.oneOf}
+                .required=${decorated.required}
                 @itemSelected=${itemSelectedDelegate}
             ></model-viewer-item-one-of>
       `;

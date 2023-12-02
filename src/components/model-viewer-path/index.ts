@@ -2,7 +2,7 @@ import { LitElement, html } from "lit";
 import { customElement, property } from "lit/decorators.js";
 import { ModelItemDecorator, PathChanged } from "../../model-viewer.types";
 import { ifDefined } from "lit/directives/if-defined.js";
-import modelViewerCss from '../../model-viewer.css';
+import modelViewerPathCss from "./model-viewer-path.css";
 
 @customElement('model-viewer-path')
 export class ModelViewerPath extends LitElement {
@@ -45,6 +45,6 @@ export class ModelViewerPath extends LitElement {
     }
 
     static override get styles() {
-      return modelViewerCss;
+      return [ modelViewerPathCss ];
     }
 }

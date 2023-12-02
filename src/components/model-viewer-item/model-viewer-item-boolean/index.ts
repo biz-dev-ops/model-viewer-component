@@ -1,5 +1,5 @@
 import { html, TemplateResult } from "lit";
-import { customElement, property } from "lit/decorators.js";
+import { customElement } from "lit/decorators.js";
 import { ItemSelected, ModelItemDecorator } from "../../../model-viewer.types";
 import { ModelViewerItem } from "..";
 
@@ -9,7 +9,7 @@ export class ModelViewerItemBoolean extends ModelViewerItem {
   override render() {
     return html`
             <details>
-                <summary>${this.title || property} / type: ${this.item.type}</summary>
+                <summary>${this.title} / type: ${this.item.type}</summary>
                 <p>${this.item.description}</p>
                 <pre>${JSON.stringify(this.item, null, 2)}</pre>
             </details>
@@ -25,6 +25,7 @@ export class ModelViewerItemBoolean extends ModelViewerItem {
         property=${decorated.property}
         title=${decorated.title}
         .item=${decorated.item}
+        .required=${decorated.required}
       >
       </model-viewer-item-boolean>
     `
