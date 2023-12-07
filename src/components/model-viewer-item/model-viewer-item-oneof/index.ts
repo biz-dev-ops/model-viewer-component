@@ -25,10 +25,6 @@ export class ModelViewerItemOneOf extends ModelViewerItem {
                                     <span class="txt--property">${item.title}</span>
                                     ${item.description ? html`
                                             <bdo-popover>
-                                                <button slot="toggle" class="popover-control popover-control--info">
-                                                    <abbr title="info" >i</abbr>
-                                                </button>
-            
                                                 ${item.description.trim()}
                                             </bdo-popover>
                                         ` : null}

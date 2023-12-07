@@ -11,8 +11,6 @@ import { ModelViewerItem } from "..";
 export class ModelViewerItemArray extends ModelViewerItem {
     
     override render() {
-        const poId = 'popover-' + Math.floor(Math.random() * Date.now()).toString(16);
-
         return html`
             <div class="item item--array">
                 <h3>
@@ -23,10 +21,6 @@ export class ModelViewerItemArray extends ModelViewerItem {
                         this.item.description ?
                         html`
                             <bdo-popover>
-                                <button slot="toggle" class="popover-control popover-control--info" popovertarget="${poId}">
-                                    <abbr title="info" >i</abbr>
-                                </button>
-
                                 ${this.item.description.trim()}
                             </bdo-popover>
                         ` : null

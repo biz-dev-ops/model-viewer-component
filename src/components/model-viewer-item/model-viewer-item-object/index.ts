@@ -11,7 +11,7 @@ export class ModelViewerItemObject extends ModelViewerItem {
     override render() {
         return html`
             <div class="item item--object">
-                <bdo-button type="button" direction="right" @clicked=${this.handleItemSelection}>
+                <bdo-button type="button" direction="right" @clicked=${this._handleItemSelection}>
                     <span class="txt--property">${this.title} ${this.required ? html`<span class="txt--required">*</span>`: ``}</span>
                 </bdo-button>
             </div>

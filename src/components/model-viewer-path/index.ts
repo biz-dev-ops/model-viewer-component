@@ -14,13 +14,13 @@ export class ModelViewerPath extends LitElement {
         return html`
             <nav>
                 <ol class="list--path">
-                    ${this.path.map((decorated: ModelItemDecorator, index) => this.renderPathItem(decorated, index))}
+                    ${this.path.map((decorated: ModelItemDecorator, index) => this._renderPathItem(decorated, index))}
                 </ol>
             </nav>
         `;
     }
 
-    private renderPathItem(decorated: ModelItemDecorator, index: number) {
+    private _renderPathItem(decorated: ModelItemDecorator, index: number) {
         const item = html`<span class="txt--property">${decorated.title}</span>`;
 
         return html`
@@ -30,7 +30,7 @@ export class ModelViewerPath extends LitElement {
                 <bdo-button
                   class="button--path"
                   .disabled="${index + 1 === this.path.length}"
-                  @clicked="${() => { this.onClick(index); }}"
+                  @clicked="${() => { this._onClick(index); }}"
                 >
                   ${item}
                 </bdo-button>
@@ -40,7 +40,7 @@ export class ModelViewerPath extends LitElement {
         `
     }
 
-    private onClick(index: number) {
+    private _onClick(index: number) {
         this.dispatchEvent(new CustomEvent<PathChanged>('pathChanged', { detail: { index } }));
     }
 

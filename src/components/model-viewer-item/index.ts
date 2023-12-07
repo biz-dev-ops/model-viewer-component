@@ -10,7 +10,7 @@ export abstract class ModelViewerItem extends LitElement {
     @property({ type: String }) override title!: string;
     @property({ type: Boolean }) required!: boolean;
 
-    protected handleItemSelection() {
+    protected _handleItemSelection() {
         this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property: this.property, item: this.item } }));
     }
     

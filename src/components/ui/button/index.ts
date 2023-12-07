@@ -15,13 +15,13 @@ export class BdoButton extends LitElement {
 
     override render() {
         return html`
-            <button type="${this.type}" .disabled='${this.disabled}' @click="${this.emitClick}">
+            <button type="${this.type}" .disabled='${this.disabled}' @click="${this._onClick}">
                 <span class="content"><slot></slot></span>
             </button>
         `;
     }
 
-    private emitClick() {
+    private _onClick() {
         this.dispatchEvent(new CustomEvent('clicked'));
     }
 

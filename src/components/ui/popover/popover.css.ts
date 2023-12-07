@@ -41,6 +41,32 @@ const popoverCss = css`
         background-color: rgba(0 0 0 / 5%);
         transition: var(--duration-base);
     }
+
+    :is(button:not([disabled])):is(:active, :hover, :focus-visible) +  [popover] {
+      border-color: var(--button-background-active)
+    }
+
+    .popover-control--info {
+      background-color: var(--color-white);
+      align-self: center;
+      border: var(--line-base) solid var(--button-background-base);
+      border-radius: var(--radius-circle);
+      block-size: var(--font-size-base);
+      cursor: pointer;
+      font-size: var(--font-size-xs);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1;
+      text-decoration: none;
+    }
+
+    .popover-control--info abbr[title] {
+      border: 0;
+      line-height: 1em;
+      text-decoration: none;
+      font-weight: 600;
+    }
 `;
 
 export default popoverCss;

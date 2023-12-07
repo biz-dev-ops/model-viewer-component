@@ -32,10 +32,6 @@ export class ModelViewerItemValue extends ModelViewerItem {
                         this.item.description ?
                         html`
                             <bdo-popover>
-                                <button slot="toggle" class="popover-control popover-control--info">
-                                    <abbr title="info" >i</abbr>
-                                </button>
-
                                 ${this.item.description.trim()}
                             </bdo-popover>
                         ` : null
