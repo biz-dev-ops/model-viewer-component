@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 
 import { ItemSelected, ModelItem, ModelItemDecorator, PathChanged } from './model-viewer.types';
@@ -8,6 +8,7 @@ import modelViewerCss from './model-viewer.css';
 import "./components/ui/button";
 import "./components/ui/popover";
 import "./components/model-viewer-path"
+import "./components/model-viewer-item/model-viewer-item-object";
 
 @customElement('model-viewer')
 export class ModelViewer extends LitElement {
@@ -72,20 +73,7 @@ export class ModelViewer extends LitElement {
     this.path = this.path.slice(0, event.detail.index + 1);
   }
 
-  static override get styles() {
-    const hostCSS = css`
-      :host {
-          border: var(--line-base) solid var(--color-brand-a40);
-          padding: var(--space-md);
-          display: block;
-          border-radius: var(--radius-base);
-          font-size: var(--font-size-sm);
-          display: flex;
-          flex-direction: column;
-          gap: var(--space-md);
-        }
-  `;
-  
-    return [hostCSS, modelViewerCss];
+  static override get styles() {  
+    return modelViewerCss;
   }
 }
