@@ -14,16 +14,11 @@ export class ModelViewerItemObjectProperties extends ModelViewerItem {
             <div class="item item--object">
                 <h2>
                     <span class="txt--property">
-                    ${this.title}
-                    ${this.required ? html`<span class="txt--required">*</span>`: ``}
+                        ${this.title}
+                        ${this.required ? html`<span class="txt--required">*</span>`: ``}
                     </span>
-                </h2>
-                
-                ${
-                    this.item.description ?
-                    html`<p>${this.item.description}</p>` : null
-                }
-                
+                </h2>     
+                ${this.item.description ? html`<p>${this.item.description}</p>` : null}      
                 <div class="items" slot="items">
                     <slot></slot>
                 </div>

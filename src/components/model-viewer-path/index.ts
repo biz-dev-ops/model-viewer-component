@@ -27,11 +27,7 @@ export class ModelViewerPath extends LitElement {
           <li class="${ifDefined(decorated.type()?.toLowerCase())}">
             ${decorated.type() !== 'array' ?
                 html`
-                <bdo-button
-                  class="button--path"
-                  .disabled="${index + 1 === this.path.length}"
-                  @clicked="${() => { this._onClick(index); }}"
-                >
+                <bdo-button class="button--path" .disabled="${index + 1 === this.path.length}" @clicked="${() => { this._onClick(index); }}">
                   ${item}
                 </bdo-button>
             ` : item

@@ -36,12 +36,6 @@ const popoverCss = css`
         transition: var(--duration-base);
     }
 
-    [popover]::backdrop {
-        pointer-events: none;
-        background-color: rgba(0 0 0 / 5%);
-        transition: var(--duration-base);
-    }
-
     :is(button:not([disabled])):is(:active, :hover, :focus-visible) +  [popover] {
       border-color: var(--button-background-active)
     }

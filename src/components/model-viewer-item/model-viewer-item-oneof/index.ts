@@ -19,19 +19,19 @@ export class ModelViewerItemOneOf extends ModelViewerItem {
 
                 <ul class="list--one-of">
                     ${this.items.map(item => html`
-                            <li>
-                                <bdo-button direction="right" @clicked="${() => { this._onClicked(item); }}">
-                                    <span class="button-label">
-                                    <span class="txt--property">${item.title}</span>
-                                    ${item.description ? html`
-                                            <bdo-popover>
-                                                ${item.description.trim()}
-                                            </bdo-popover>
-                                        ` : null}
-                                    </span>
-                                </bdo-button>
-                            </li>
-                        `)}
+                        <li>
+                            <bdo-button direction="right" @clicked="${() => { this._onClicked(item); }}">
+                                <span class="button-label">
+                                <span class="txt--property">${item.title}</span>
+                                ${item.description ? html`
+                                    <bdo-popover>
+                                        ${item.description.trim()}
+                                    </bdo-popover>
+                                ` : null}
+                                </span>
+                            </bdo-button>
+                        </li>
+                    `)}
                 </ul>
             </div>
         `;

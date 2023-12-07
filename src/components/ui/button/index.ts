@@ -5,18 +5,20 @@ import buttonCss from './button.css';
 @customElement('bdo-button')
 export class BdoButton extends LitElement {
     @property({ type: String })
-        type: 'button' | 'submit' | 'reset' | 'menu' = 'button';
+    type: 'button' | 'submit' | 'reset' | 'menu' = 'button';
 
     @property({ type: String })
-        direction!: 'up' | 'right' | 'down' | 'left';
+    direction!: 'up' | 'right' | 'down' | 'left';
         
     @property({ type: Boolean })
-        disabled = false;
+    disabled = false;
 
     override render() {
         return html`
             <button type="${this.type}" .disabled='${this.disabled}' @click="${this._onClick}">
-                <span class="content"><slot></slot></span>
+                <span class="content">
+                    <slot></slot>
+                </span>
             </button>
         `;
     }

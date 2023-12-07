@@ -5,15 +5,15 @@ import popoverCss from "./popover.css";
 @customElement("bdo-popover")
 export class BdoPopover extends LitElement {
     
-    @query(".popover-control--target")
+    @query("[popover]")
     _popoverElement!: HTMLElement;
 
     override render() {
         return html`
-             <button popovertarget="my-popover" class="popover-control popover-control--info" .onclick=${this._onClick.bind(this)}>
+             <button popovertarget="popover-target" class="popover-control popover-control--info" @click=${this._onClick.bind(this)}>
                 <abbr title="info" >i</abbr>
             </button>
-            <div id="my-popover" popover class="popover-control popover-control--target">
+            <div id="popover-target" popover>
                 <slot></slot>
             </div>
         `;
@@ -22,16 +22,14 @@ export class BdoPopover extends LitElement {
     private _onClick(event:Event): void {
         event.stopPropagation();
         const button = event.target as HTMLButtonElement;
-
+        (this._popoverElement as any).togglePopover();
 
         if (button.getAttribute("aria-expanded") === "true") {
             button.setAttribute("aria-expanded", "false");
-            (this._popoverElement as any).hidePopover();
             this._popoverElement.style.display = "none";
         } 
         else {
             button.setAttribute("aria-expanded", "true");
-            (this._popoverElement as any).showPopover();
             this._popoverElement.style.display = "block";
             this._popoverElement.style.position = "fixed";
             this._popoverElement.style.zIndex = "999";

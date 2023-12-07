@@ -36,7 +36,6 @@ export class ModelViewerItemValue extends ModelViewerItem {
                             </bdo-popover>
                         ` : null
                     }
-
                     <span class="icon--type">
                         ${this.item.type}${this.item.format ? html`: <em>${this.item.format}</em>` : ''}
                     </span>

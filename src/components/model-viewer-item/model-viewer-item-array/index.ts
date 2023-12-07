@@ -118,11 +118,11 @@ export class ModelViewerItemArray extends ModelViewerItem {
 
         return html`
             <model-viewer-item-array
-            property=${decorated.property}
-            title=${decorated.title}
-            .item=${decorated.item}
-            .required=${decorated.required}
-            @itemSelected=${itemSelectedDelegate}
+                property=${decorated.property}
+                title=${decorated.title}
+                .item=${decorated.item}
+                .required=${decorated.required}
+                @itemSelected=${itemSelectedDelegate}
             >
                 ${ModelItemBuilder.build(new ModelItemDecorator(decorated.item.items), itemSelectedDelegate, root)}
             </model-viewer-item-array>
