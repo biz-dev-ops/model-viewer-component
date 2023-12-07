@@ -1,4 +1,4 @@
-import { html, TemplateResult } from "lit";
+import { css, html, TemplateResult } from "lit";
 import { customElement } from "lit/decorators.js";
 import { ItemSelected, ModelItemDecorator } from "../../../model-viewer.types";
 
@@ -49,6 +49,43 @@ export class ModelViewerItemValue extends ModelViewerItem {
                 ${properties}
             </div>
         `;
+    }
+
+    static override get styles() {
+        return [...super.styles, css`
+             dt {
+                color: rgba(0 0 0 / 50%);
+                font-weight: 600;
+            }
+
+            dd {
+                margin-inline-start: 0
+            }
+
+            dd + dt {
+                margin-block-start: 1em;
+            }
+            
+            .item--value {
+                background-color: var(--color-black-a05);
+                border-radius: var(--radius-half);
+                padding: var(--space-sm);
+            }
+
+            .icon--type {
+                margin-inline-start: auto;
+                font-size: var(--font-size-xs);
+                background-color: var(--main-surface);
+                border-radius: var(--radius-pill);
+                align-self: center;
+                padding: var(--space-xxs) var(--space-xs);
+            }
+
+            .icon--type em {
+                font-style: normal;
+                font-weight: 400;
+            }
+        `];
     }
 
     public static build(decorated: ModelItemDecorator, _itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void) : TemplateResult {

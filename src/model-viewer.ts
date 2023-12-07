@@ -5,10 +5,7 @@ import { ItemSelected, ModelItem, ModelItemDecorator, PathChanged } from './mode
 import { ModelItemBuilder } from './modules/model-item-builder';
 import modelViewerCss from './model-viewer.css';
 
-import "./components/ui/button";
-import "./components/ui/popover";
-import "./components/model-viewer-path"
-import "./components/model-viewer-item/model-viewer-item-object";
+import "./components/model-viewer-path";
 
 @customElement('model-viewer')
 export class ModelViewer extends LitElement {
@@ -53,7 +50,7 @@ export class ModelViewer extends LitElement {
   }
 
   override updated() {
-    this.shadowRoot?.querySelector('nav')?.scrollIntoView();
+    this.shadowRoot?.querySelector('model-viewer-path')?.scrollIntoView();
   }
   
   setPath(property: string, item: ModelItem | undefined) {

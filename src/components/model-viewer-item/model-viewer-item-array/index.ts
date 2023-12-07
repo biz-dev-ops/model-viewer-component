@@ -1,5 +1,5 @@
 import { customElement } from "lit/decorators.js";
-import { html } from "lit";
+import { css, html } from "lit";
 import { ItemSelected, ModelItemDecorator } from "../../../model-viewer.types";
 
 import "../../ui/button";
@@ -36,7 +36,7 @@ export class ModelViewerItemArray extends ModelViewerItem {
                 <ul class="list--array">
                     <li>
                         <slot name="value">
-                            <bdo-button direction="right" @clicked=${this.onClicked}>
+                            <bdo-button direction="right" @clicked=${this._onClicked}>
                                 <span class="txt--property">${this.item.items.title}</span>
                             </bdo-button>
                         </slot>
@@ -61,9 +61,63 @@ export class ModelViewerItemArray extends ModelViewerItem {
         }
     }
 
-    onClicked() {
+    private _onClicked() {
         this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property: this.property, item: this.item } }));
         this.dispatchEvent(new CustomEvent<ItemSelected>('itemSelected', { detail: { property: this.property, item: this.item.items } }));
+    }
+
+    static override get styles() {
+        return [...super.styles, css`
+
+            .item--array {
+                border-radius: var(--radius-half);
+                border: var(--line-thin) solid var(--item-line-color);
+                padding: var(--space-sm);
+                padding-block-end: 0;
+                margin-block-end: calc(var(--space-xs) * -1);
+                mask-image: linear-gradient(to top, transparent var(--space-sm), black var(--space-xl));
+                -webkit-mask-image: linear-gradient(to top, transparent var(--space-sm), black var(--space-xl));
+            }
+            
+            .list--array {
+                list-style: none;
+                padding-inline-start: 0;
+                display: flex;
+                flex-direction: column;
+                row-gap: var(--space-sm);
+            }
+
+            .list--array li {
+                position: relative;
+            }
+            
+            .list--array li::before,
+            .list--array li::after {
+            content: '';
+                position: absolute;
+                inset-inline-start: calc(var(--space-sm) * -1);
+                inset-block-start: calc(var(--space-sm) + var(--space-xxs));
+            }
+
+            .list--array li::before {
+                background-color: var(--item-line-color);
+                block-size: var(--line-thin);
+                inline-size: var(--space-sm);
+            }
+            
+            .list--array li::after {
+                aspect-ratio: 1;
+                background-color: var(--main-surface);
+                block-size: .625rem;
+                border-radius: var(--radius-circle);
+                border: var(--line-thin) solid var(--item-line-color);
+                transform: translateX(-.4375rem) translateY(-.25rem);
+            }
+
+            .list--array li:not(:first-child) {
+                pointer-events: none;
+            }
+        `];
     }
 
     static build(decorated: ModelItemDecorator, itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void, root: boolean): import("lit-html").TemplateResult {

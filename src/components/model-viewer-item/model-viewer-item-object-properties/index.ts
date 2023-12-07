@@ -1,5 +1,5 @@
 import { customElement } from "lit/decorators.js";
-import { TemplateResult, html } from "lit";
+import { TemplateResult, css, html } from "lit";
 import { ItemSelected, ModelItemDecorator } from "../../../model-viewer.types";
 
 import "../../ui/button";
@@ -29,6 +29,16 @@ export class ModelViewerItemObjectProperties extends ModelViewerItem {
                 </div>
             </div>
         `;
+    }
+
+    static override get styles() {
+        return [...super.styles, css`
+            .items {
+                display: flex;
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+        `];
     }
 
     public static build(decorated: ModelItemDecorator, itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void, root: boolean) : TemplateResult {

@@ -15,6 +15,6 @@ export abstract class ModelViewerItem extends LitElement {
     }
     
     static override get styles() {
-        return modelViewerItemCss;
+        return [ modelViewerItemCss ];
     }
 }

@@ -25,7 +25,7 @@
 		"dist/"
 	],
 	"scripts": {
-		"develop": "webpack-dev-server --mode development",
+		"watch": "webpack-dev-server --mode development",
 		"build": "webpack --mode production",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},

@@ -8,15 +8,15 @@ export class ModelViewerItemBoolean extends ModelViewerItem {
 
   override render() {
     return html`
-            <details>
-                <summary>${this.title} / type: ${this.item.type}</summary>
-                <p>${this.item.description}</p>
-                <pre>${JSON.stringify(this.item, null, 2)}</pre>
-            </details>
+        <details>
+            <summary>${this.title} / type: ${this.item.type}</summary>
+            <p>${this.item.description}</p>
+            <pre>${JSON.stringify(this.item, null, 2)}</pre>
+        </details>
       `;
   }
 
-  public static build(decorated: ModelItemDecorator, _itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void) : TemplateResult {
+  public static build(decorated: ModelItemDecorator, _itemSelectedDelegate: (event: CustomEvent<ItemSelected>) => void): TemplateResult {
     if (decorated.item.type != 'boolean')
       return html``;
 
