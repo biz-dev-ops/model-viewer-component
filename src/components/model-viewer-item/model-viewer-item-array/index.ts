@@ -29,11 +29,9 @@ export class ModelViewerItemArray extends ModelViewerItem {
                 
                 <ul class="list--array">
                     <li>
-                        <slot name="value">
-                            <bdo-button direction="right" @clicked=${this._onClicked}>
-                                <span class="txt--property">${this.item.items.title}</span>
-                            </bdo-button>
-                        </slot>
+                        <bdo-button direction="right" @clicked=${this._onClicked}>
+                            <span class="txt--property">${this.item.items.title || "item"}</span>
+                        </bdo-button>
                     </li>
                 </ul>
             </div>

@@ -34,6 +34,7 @@ export class ModelViewer extends LitElement {
   }
 
   override update(changedProperties: Map<string, unknown>) {
+    console.log(changedProperties)
     if(changedProperties.has("dataJson")) {
       this.path = [];
       this.model = JSON.parse(this.dataJson);
@@ -41,6 +42,7 @@ export class ModelViewer extends LitElement {
       this.setPath('', this.model);
     }
     else if(changedProperties.has("model")) {
+      console.log('ja')
       this.path = [];
       this.model.title = this.model.title || this.name;
       this.setPath('', this.model);
